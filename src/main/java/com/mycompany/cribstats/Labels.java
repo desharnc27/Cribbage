@@ -72,6 +72,17 @@ public class Labels {
         return res;
         
     }
+    /**
+     * Returns a String representation of a set of cards.
+     * @return a String representation of a set of cards.
+     */
+    public static String verboArr(int[] arr){
+        String res=arr[0]+"";
+        for (int i=1;i<arr.length;i++)
+            res+=(","+arr[i]);
+        return res;
+        
+    }
     
     /**
      * Returns the suit represented by user input
@@ -181,11 +192,11 @@ public class Labels {
         //return String.valueOf(d);
         
         if (d < 1) {
-            return " " + String.format("%.2g", d);
+            return " " + String.format("%.7g", d);
         } else if (d < 10) {
-            return " " + String.format("%.3g", d);
+            return " " + String.format("%.8g", d);
         } else {
-            return String.format("%.4g", d);
+            return String.format("%.9g", d);
         }
         /*
         if (d < 1) {

@@ -33,7 +33,7 @@ public class StatMaker {
      */
     public static void printDiscardReport(String[] stArr) {
         if (stArr.length == 0) {
-            stArr = new String[]{"no h4 c6 s7 d5 s5 h5"};
+            stArr = new String[]{"c6 s6 h6 d6 hK c9"};
         }
         if (stArr.length == 1) {
             stArr = stArr[0].split(" ");
