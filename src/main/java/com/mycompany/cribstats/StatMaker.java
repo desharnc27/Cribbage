@@ -58,7 +58,13 @@ public class StatMaker {
      * @param ids ids of the 6 initial cards
      */
     public static void printDiscardReport(boolean myCrib, int[] ids) {
-
+        
+        float [][] cribCoeffs;
+        //if (Database.containsSuitedCribData()){
+            cribCoeffs=Database.getCopyOfSuitedCribData(!myCrib);
+        //}
+        //if (cribCoeffs!=null)
+        //    clearCribStatsFromUnavails(cribCoeffs,ids);
         Card chosenCards[] = new Card[4];
         Card ridCards[] = new Card[2];
 
@@ -86,7 +92,14 @@ public class StatMaker {
                 }
 
                 double handEval = computeHandAverage(chosenCards, ridCards);
-                double cribEval = computeCribAverage(ridCards, chosenCards);
+                double cribEval;
+                if (cribCoeffs==null){
+                    //No prexisting stats will be used for calculations
+                    cribEval = computeCribAverage(ridCards, chosenCards);
+                } else {
+                    //Prexisting crib stats in some files will be used for calculations
+                    cribEval = computeCribAverage(ridCards, chosenCards,cribCoeffs);
+                }
                 if (!myCrib) {
                     cribEval *= -1;
                 }
@@ -251,6 +264,69 @@ public class StatMaker {
 
         }
         return sumScore / (double) nbPoss;
+    }
+    /**
+     * Compute the average value of a crib containing two specific cards.
+     *
+     * @param myCrib the two cards of the crib
+     * @param unavail cards that were already seen and can neither be the flip 
+     * nor be the two other ones of the crib.
+     * @param cribStats array containing statistics on what the other player my put in the crib
+     * @return the average value of the crib. Note: the two other cards of the
+     * crib and the flip are considered has uniformly random between remaining
+     * available cards.
+     */
+    public static double computeCribAverage(Card[] myCrib, Card[] unavail, float[][] cribStats) {
+        
+        
+        boolean[] alreadyUsed = new boolean[52];
+        for (Card c : myCrib) {
+            alreadyUsed[c.getId()] = true;
+        }
+        for (Card c : unavail) {
+            alreadyUsed[c.getId()] = true;
+        }
+        
+        int nbFlipPoss=0;
+        float globalSumScore=0.0f;
+
+        for (int i = 0; i < 52; i++) {
+            if (alreadyUsed[i]) {
+                continue;
+            }
+            nbFlipPoss++;
+            alreadyUsed[i] = true;
+            
+            float sumScore = 0;
+            float sumCoeff=0;
+
+            for (int j = 0; j < 52; j++) {
+                if (alreadyUsed[j]) {
+                    continue;
+                }
+                for (int k = j + 1; k < 52; k++) {
+                    if (alreadyUsed[k]) {
+                        continue;
+                    }
+                    float coeff=cribStats[j][k];
+                    
+                    Card[] crib = new Card[4];
+                    crib[0] = myCrib[0];
+                    crib[1] = myCrib[1];
+                    crib[2] = new Card(j);
+                    crib[3] = new Card(k); 
+                    Card commo = new Card(i);
+                    float score = PointCounting.countPoints(commo, crib, true);
+                    sumScore += score*coeff;
+                    sumCoeff += coeff;
+
+                }
+            }
+            globalSumScore+=sumScore / sumCoeff;
+            alreadyUsed[i] = false;
+
+        }
+        return globalSumScore/nbFlipPoss;
     }
 
     

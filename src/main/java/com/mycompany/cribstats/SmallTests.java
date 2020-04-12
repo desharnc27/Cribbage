@@ -53,11 +53,12 @@ public class SmallTests {
     }
     public static void main4() {
         Ambitious.bigShitt(true);
-
+        
     }
     public static void main5() {
         Database.readCribSelfFile();
-        
+        String []args = new String[]{"f d2 d3 c7 sT sJ sK"};
+        StatMaker.printDiscardReport(args);
     }
 
     public static void main(String[] args) {

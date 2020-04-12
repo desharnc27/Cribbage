@@ -249,6 +249,70 @@ public class Ambitious {
         return res;
 
     }
+    private static float averageCribScoreXX(int[] crib2Cards, int[] unavail, float probOfCrib2SameSuit) {
+        int[] remainAvail = new int[14];
+        for (int k = 1; k < remainAvail.length; k++) {
+            remainAvail[k] = 4;
+        }
+        for (int k = 0; k < unavail.length; k++) {
+            remainAvail[unavail[k]]--;
+        }
+        for (int k = 0; k < crib2Cards.length; k++) {
+            remainAvail[crib2Cards[k]]--;
+        }
+        
+
+        int coeff = 1;
+        float sumScore = 0;
+        int sumCoeff = 0;
+        for (int i = 0; i < 14; i++) {
+            if (remainAvail[i] <= 0) {
+                continue;
+            }
+            coeff *= remainAvail[i]--;
+
+            for (int j = 1; j < 14; j++) {
+                if (remainAvail[j] <= 0) {
+                    continue;
+                }
+                coeff *= remainAvail[j]--;
+                for (int k = j + 1; k < 14; k++) {
+                    if (remainAvail[k] <= 0) {
+                        continue;
+                    }
+                    coeff *= remainAvail[k]--;
+
+                    //nbPoss++;
+                    int[] crib = new int[4];
+                    crib[0] = crib2Cards[0];
+                    crib[1] = crib2Cards[1];
+                    crib[2] = j;
+                    crib[3] = k;
+                    Arrays.sort(crib);
+                    int idx5 = getIdx5(i, crib);
+                    sumScore += Database.getScore5WithoutFlush(idx5) * coeff;
+                    sumScore += PointCounting.specialFlush(i,crib2Cards,j,k,probOfCrib2SameSuit);
+                    sumCoeff += coeff;
+
+                    coeff /= ++remainAvail[k];
+                }
+                coeff /= ++remainAvail[j];
+            }
+            coeff /= ++remainAvail[i];
+
+        }
+        float res = sumScore / sumCoeff;
+        if (Float.isNaN(res)) {
+            System.out.println("Found something wiird:");
+            System.out.println(sumScore);
+            System.out.println(sumCoeff);
+            SmallTests.println(crib2Cards);
+            SmallTests.println(unavail);
+        }
+
+        return res;
+
+    }
     /**
      * Returns the index of a flip-hand combination
      * @param commo the flip

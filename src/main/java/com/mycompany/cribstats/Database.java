@@ -24,10 +24,17 @@ class Database {
 
     private static int[][] pascalTriangle;
     private static NumCombo[] list5;
+    
     private static float[][] cribWeightsSelf=new float [52][52];
     private static float[][] cribWeightsOpp=new float [52][52];
     private static String filenameSelf = "cribWeightsSelf.txt";
     private static String filenameOpp = "cribWeightsOpp.txt";
+    
+    private static float[][] cribWeightsSelfUnsuited=new float [13][13];
+    private static float[][] cribWeightsOppUnsuited=new float [13][13];
+    
+    private static boolean vetoUseDataForReal = true;
+    
 
     public static void proceed() {
         createPascal();
@@ -88,7 +95,20 @@ class Database {
                 System.out.println();
             }
         }
+        fillUnsuitedCrib(weights);
 
+    }
+    private static void fillUnsuitedCrib(float[][] weights){
+        float [][]unSuitedW;
+        if (weights == cribWeightsSelf) {
+            unSuitedW = cribWeightsSelfUnsuited;
+        } else {
+            unSuitedW = cribWeightsOppUnsuited;
+        }
+        for (int i=0;i<13;i++){
+            //unSuitedW[]=
+        }
+        
     }
 
     public static void writeCribFile(float[][] weights, boolean self) {
@@ -148,5 +168,15 @@ class Database {
 
     public static float getScore5WithoutFlush(int idx) {
         return list5[idx].scoreWithoutFlush;
+    }
+
+    static float[][] getCopyOfSuitedCribData(boolean selfCrib) {
+        if(!Database.vetoUseDataForReal)
+            return null;
+        if (selfCrib){
+            return cribWeightsSelf;           
+        }
+        return cribWeightsOpp;
+        
     }
 }
