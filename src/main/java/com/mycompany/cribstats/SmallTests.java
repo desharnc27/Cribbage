@@ -52,20 +52,28 @@ public class SmallTests {
 
     }
     public static void main4() {
-        Ambitious.bigShitt(true);
+
+        //Ambitious.bigShitt(true);
+        //Database.vetoUseDataForReal=true;
+        //Database.readUnsuitedCribOppFile();
+        //Ambitious.bigShitt(true);
         
     }
     public static void main5() {
-        Database.readCribSelfFile();
-        String []args = new String[]{"f d2 d3 c7 sT sJ sK"};
+        //Database.readUnsuitedCribSelfFile();
+        //Database.readUnsuitedCribOppFile();
+        String []args = new String[]{"y di2 cl-2 d3 c4 c8 c1"};
         StatMaker.printDiscardReport(args);
+    }
+    public static void main6() {
+       Database.megaAnalysis();
     }
 
     public static void main(String[] args) {
         Database.proceed();
         Labels.proceed();
         try {
-            main5();
+            main6();
         } catch (Exception e) {
             System.out.println("here");
             System.out.println(e.getClass());

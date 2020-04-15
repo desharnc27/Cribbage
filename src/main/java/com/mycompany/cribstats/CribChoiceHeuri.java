@@ -28,9 +28,10 @@ public class CribChoiceHeuri {
     /**
      * Adds the contribution of this choice to the weight array values
      * @param values array that contains all probability weights of pair of cards to throw in the crib
+     * @param unSuitedVal same that values but unsuited
      * @param multiCoeff a priori probability of the sixtuple the choice comes from 
      */
-    public void addTo(float values [][],int multiCoeff){
+    public void addTo(float values [][], float [][] unSuitedVal ,int multiCoeff){
         if (multiCoeff==0)
             return;
         if (numbers[0]==numbers[1]){
@@ -40,6 +41,7 @@ public class CribChoiceHeuri {
                 int cardId1=Card.suitNumToId(j, numbers[1]);
                 values[cardId0][cardId1]+=multiCoeff/6.0f;
             }
+            unSuitedVal[numbers[0]-1][numbers[0]-1]+=multiCoeff;
             return;
         }
         
@@ -54,10 +56,17 @@ public class CribChoiceHeuri {
                 }
                 values[cardId0][cardId1]+=multiCoeff/4.0f;
             }
+            unSuitedVal[numbers[1]-1][numbers[0]-1]+=multiCoeff;
+            
             return;
         }
+        unSuitedVal[numbers[1]-1][numbers[0]-1]+=multiCoeff*probSameSuit;
+        unSuitedVal[numbers[0]-1][numbers[1]-1]+=(1-probSameSuit)*multiCoeff;
+        
         float eqValue=probSameSuit*multiCoeff/4.0f;
         float diffValue=(1-probSameSuit)*multiCoeff/12.0f;
+        
+        
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int cardId0=Card.suitNumToId(i, numbers[0]);
