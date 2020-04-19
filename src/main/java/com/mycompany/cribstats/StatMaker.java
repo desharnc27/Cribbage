@@ -61,7 +61,7 @@ public class StatMaker {
         
         float [][] cribCoeffs;
         //if (Database.containsSuitedCribData()){
-            cribCoeffs=Database.getCopyOfSuitedCribData(!myCrib);
+        cribCoeffs=Database.getCopyOfSuitedCribData(!myCrib);
         //}
         //if (cribCoeffs!=null)
         //    clearCribStatsFromUnavails(cribCoeffs,ids);

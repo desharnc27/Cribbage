@@ -11,20 +11,20 @@ import java.util.Arrays;
  *
  * @author desharnc27
  */
-public class Ambitious {
+public class UnsuitedMeths {
 
-    public static CribChoiceHeuri getChoiceF6(int[] cards, boolean myCrib) {
+    public static CCHBunch getChoiceF6(int[] cards, boolean myCrib) {
         return getChoiceF6(cards, myCrib, null);
     }
 
     /**
-     * TODO
+     * Returns the TODO
      *
      * @param cards
      * @param myCrib
      * @return
      */
-    public static CribChoiceHeuri getChoiceF6(int[] cards, boolean myCrib, float[][] cribstats) {
+    public static CCHBunch  getChoiceF6(int[] cards, boolean myCrib, float[][] cribstats) {
         int chosenCards[] = new int[4];
         int ridCards[] = new int[2];
 
@@ -49,16 +49,16 @@ public class Ambitious {
                     }
                 }
 
-                float handEval = Ambitious.averageHandScore(chosenCards, ridCards);
+                float handEval = averageHandScore(chosenCards, ridCards);
 
                 float prob2CribSameSuit = twadocrinian(ridCards, chosenCards, myCrib);
 
                 float cribEval;
 
                 if (cribstats == null) {
-                    cribEval = Ambitious.averageCribScore(ridCards, chosenCards, prob2CribSameSuit);
+                    cribEval = averageCribScore(ridCards, chosenCards, prob2CribSameSuit);
                 } else {
-                    cribEval = Ambitious.averageCribScore(ridCards, chosenCards, prob2CribSameSuit, cribstats);
+                    cribEval = averageCribScore(ridCards, chosenCards, prob2CribSameSuit, cribstats);
                 }
                 //float cribEval=0;
                 if (!myCrib) {
@@ -86,7 +86,19 @@ public class Ambitious {
         for (int i = 14; i >= 0; i--) {
             //System.out.println(info[permArr[i]]);
         }
-        return (recip[permArr[permArr.length - 1]]);
+        
+        float bestScore=score[score.length-1];
+        int idxOut=score.length-1;
+        while(idxOut>=0 && score[idxOut]>bestScore-1f)
+            idxOut--;
+        CribChoiceHeuri []cchb= new CribChoiceHeuri[score.length-1-idxOut];
+        float []weights=new float[cchb.length];
+        for (int i=0;i<cchb.length;i++){
+            cchb[i]= recip[permArr[permArr.length - 1-i]];
+            weights[i]= 1f-bestScore+score[permArr.length - 1-i];
+        }
+        //return (recip[permArr[permArr.length - 1]]);
+        return new CCHBunch(cchb,weights);
 
     }
 
@@ -316,23 +328,23 @@ public class Ambitious {
                     crib[3] = k;
                     Arrays.sort(crib);
                     int idx5 = getIdx5(i, crib);
-                    
+
                     //sumScore += PointCounting.specialFlush(i,crib2Cards,j,k,probOfCrib2SameSuit);
                     //TODO:flushFunky calculation
                     if (k == j) {
-                        sumScore += Database.getScore5WithoutFlush(idx5) * secondCoeff*cribstats[j-1][j-1];
-                        sumCoeff += cribstats[j-1][j-1] * secondCoeff;
+                        sumScore += Database.getScore5WithoutFlush(idx5) * secondCoeff * cribstats[j - 1][j - 1];
+                        sumCoeff += cribstats[j - 1][j - 1] * secondCoeff;
                     } else {
 
-                        float v0 = cribstats[j-1][k-1];
-                        float v1 = cribstats[k-1][j-1];
+                        float v0 = cribstats[j - 1][k - 1];
+                        float v1 = cribstats[k - 1][j - 1];
                         if (allDiff(crib, i)) {
                             //TODO:continue here
                             sumScore += 5 / 16.0f * probOfCrib2SameSuit * v1 * secondCoeff;
                         }
-                        sumScore += Database.getScore5WithoutFlush(idx5) * secondCoeff*(v0+v1);
+                        sumScore += Database.getScore5WithoutFlush(idx5) * secondCoeff * (v0 + v1);
                         sumCoeff += (v0 + v1) * secondCoeff;
-                        
+
                     }
                     if (k == j) {
                         secondCoeff *= 2;
@@ -345,7 +357,7 @@ public class Ambitious {
             float midScore = sumScore / sumCoeff;
             globalSumScore += midScore * firstCoeff;
             globalSumCoeff += firstCoeff;
-            
+
             ++remainAvail[i];
         }
         float res = globalSumScore / globalSumCoeff;
@@ -360,8 +372,6 @@ public class Ambitious {
         return res;
 
     }
-
-    
 
     /**
      * Returns the index of a flip-hand combination
@@ -466,8 +476,10 @@ public class Ambitious {
         }
         return (sumRep + 1) / 4.0f;
     }
-
-    public static float [][] bigShitt(float [][]readUnsuitedScorePairs,boolean myCrib, int level) {
+    public static float[][] bigShitt( boolean myCrib) {
+        return bigShitt(null, myCrib, 0);
+    }
+    public static float[][] bigShitt(float[][] readUnsuitedScorePairs, boolean myCrib, int level) {
         int[] combId = new int[6];
 
         //
@@ -490,13 +502,13 @@ public class Ambitious {
             if (Arrays.equals(debugNum, numbers)) {
                 int a = 1;
             }
-            CribChoiceHeuri ricp = getChoiceF6(numbers, myCrib, readUnsuitedScorePairs);
+            CCHBunch cchb = getChoiceF6(numbers, myCrib, readUnsuitedScorePairs);
             int multicoef = nbPossOfCardSet(numbers);
-            ricp.addTo(arrOfScorePairs, unsuitedScorePairs, multicoef);
+            cchb.addTo(arrOfScorePairs, unsuitedScorePairs, multicoef);
             //System.out.println("__-----___------___");
             //SmallTests.println(numbers);
             //System.out.println("multicoef: " + multicoef);
-            //System.out.println(ricp);
+            //System.out.println(cchb);
             //System.out.println("__-----___------___");
 
         } while (CombMeths.genCombIter(combId, 13));
@@ -515,9 +527,9 @@ public class Ambitious {
                 System.out.println();
             }
         }*/
-        Database.writeCribFile(arrOfScorePairs, myCrib,level);
-        Database.writeCribUnsuitedFile(unsuitedScorePairs, myCrib,level);
-        System.out.println("Terminated for: "+myCrib+","+level);
+        Database.writeCribFile(arrOfScorePairs, myCrib, level);
+        Database.writeCribUnsuitedFile(unsuitedScorePairs, myCrib, level);
+        System.out.println("Terminated for: " + myCrib + "," + level);
         return unsuitedScorePairs;
 
     }
@@ -551,11 +563,11 @@ public class Ambitious {
      */
     public static boolean allDiff(int[] arr, int k) {
         for (int i = 1; i < arr.length; i++) {
-            if (arr[i]==arr[i-1]||arr[i]==k) {
+            if (arr[i] == arr[i - 1] || arr[i] == k) {
                 return false;
             }
         }
-        return arr[0]!=k;
+        return arr[0] != k;
     }
 
 }

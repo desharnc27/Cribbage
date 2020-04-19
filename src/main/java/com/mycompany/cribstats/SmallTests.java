@@ -15,7 +15,7 @@ public class SmallTests {
         int[] comgen = new int[7];
         Database.createPascal();
         do {
-            System.out.print(Ambitious.getIdxCode(comgen, 0) + ": ");
+            System.out.print(UnsuitedMeths.getIdxCode(comgen, 0) + ": ");
             println(comgen);
 
         } while (CombMeths.genCombIter(comgen, 13));
@@ -26,11 +26,11 @@ public class SmallTests {
         int[] unavail = new int[]{1, 1};
         System.out.println("---------***-------");
 
-        System.out.println(Ambitious.averageHandScore(hand, unavail));
+        System.out.println(UnsuitedMeths.averageHandScore(hand, unavail));
         unavail[0]++;
-        System.out.println(Ambitious.averageHandScore(hand, unavail));
+        System.out.println(UnsuitedMeths.averageHandScore(hand, unavail));
         unavail[1]++;
-        System.out.println(Ambitious.averageHandScore(hand, unavail));
+        System.out.println(UnsuitedMeths.averageHandScore(hand, unavail));
 
     }
 
@@ -39,24 +39,24 @@ public class SmallTests {
         System.out.println("---------***-------");
         
         System.out.println();
-        Ambitious.getChoiceF6(cards, true);
+        UnsuitedMeths.getChoiceF6(cards, true);
         System.out.println("---------***-------");
         for (int i=0;i<1;i++)
-            Ambitious.getChoiceF6(cards, false);
+            UnsuitedMeths.getChoiceF6(cards, false);
 
     }
     public static void main3() {
         int [] cr= new int[]{2,4};
         int [] ha= new int[]{2,4,3,3};
-        System.out.println(Ambitious.twadocrinian(cr, ha, true));
+        System.out.println(UnsuitedMeths.twadocrinian(cr, ha, true));
 
     }
     public static void main4() {
 
-        //Ambitious.bigShitt(true);
+        UnsuitedMeths.bigShitt(true);
         //Database.vetoUseDataForReal=true;
         //Database.readUnsuitedCribOppFile();
-        //Ambitious.bigShitt(true);
+        //UnsuitedMeths.bigShitt(true);
         
     }
     public static void main5() {
@@ -67,6 +67,11 @@ public class SmallTests {
     }
     public static void main6() {
        Database.megaAnalysis();
+    }
+    public static void main7() {
+       int [] cards=new int[]{2,6,7,9,11,12};
+       CCHBunch c=UnsuitedMeths.getChoiceF6(cards, false);
+       
     }
 
     public static void main(String[] args) {

@@ -31,8 +31,8 @@ public class CribChoiceHeuri {
      * @param unSuitedVal same that values but unsuited
      * @param multiCoeff a priori probability of the sixtuple the choice comes from 
      */
-    public void addTo(float values [][], float [][] unSuitedVal ,int multiCoeff){
-        if (multiCoeff==0)
+    public void addTo(float values [][], float [][] unSuitedVal ,float multiCoeff){
+        if (multiCoeff==0f)
             return;
         if (numbers[0]==numbers[1]){
             for (int i = 0; i < 4; i++) 

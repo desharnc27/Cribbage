@@ -53,19 +53,19 @@ class Database {
             if (i>0){
                 
                 Database.readUnsuitedCribSelfFile(a);
-                weights=Ambitious.bigShitt(cribWeightsSelfUnsuited,false,i);
+                weights=UnsuitedMeths.bigShitt(cribWeightsSelfUnsuited,false,i);
                 
             }else
-                weights=Ambitious.bigShitt(null,false,i);
+                weights=UnsuitedMeths.bigShitt(null,false,i);
             
             Database.writeCribUnsuitedFile(weights, false, i);
             
             if (i>0){
                 
                 Database.readUnsuitedCribOppFile(a);
-                weights=Ambitious.bigShitt(cribWeightsOppUnsuited,true,i);
+                weights=UnsuitedMeths.bigShitt(cribWeightsOppUnsuited,true,i);
             }else
-                weights=Ambitious.bigShitt(null,true,i);
+                weights=UnsuitedMeths.bigShitt(null,true,i);
             Database.writeCribUnsuitedFile(weights, true, i);
         }
     }
@@ -287,7 +287,7 @@ class Database {
     }
 
     public static void create5ScoreList() {
-        list5 = Ambitious.fill5();
+        list5 = UnsuitedMeths.fill5();
     }
 
     public static int pascal(int i, int j) {
