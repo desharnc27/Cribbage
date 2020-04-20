@@ -12,42 +12,52 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Data handler
+ * Data handler. This class also manage most statistic reading/writing in files
+ * 
+ * TODO: this class needs a lot of clean up
  *
  * @author desharnc27
  */
 class Database {
+    
+    private static final String REPORT_PATH="weightReports/";
     private static int[][] pascalTriangle;
     private static NumCombo[] list5;
     
-    private static float[][] cribWeightsSelf=new float [52][52];
-    private static float[][] cribWeightsOpp=new float [52][52];
+    private static final float[][] cribWeightsSelf=new float [52][52];
+    private static final float[][] cribWeightsOpp=new float [52][52];
     
-    private static boolean ssFill=false;
-    private static boolean osFill=false;
+    //private static boolean ssFill=false;
+    //private static boolean osFill=false;
     
-    private static String filenameSelf = "cribWeightsSelf";
-    private static String filenameOpp = "cribWeightsOpp";
+    private static String filenameSelf = REPORT_PATH+"cribWeightsSelf";
+    private static String filenameOpp = REPORT_PATH+"cribWeightsOpp";
     
-    private static float[][] cribWeightsSelfUnsuited=new float [13][13];
-    private static float[][] cribWeightsOppUnsuited=new float [13][13];
+    private static final float[][] cribWeightsSelfUnsuited=new float [13][13];
+    private static final float[][] cribWeightsOppUnsuited=new float [13][13];
     
-    private static boolean suFill=false;
-    private static boolean ouFill=false;
+    //private static boolean suFill=false;
+    //private static boolean ouFill=false;
     
-    private static String filenameSelfUnsuited = "cribWeightsSelfUnsuited";
-    private static String filenameOppUnsuited = "cribWeightsOppUnsuited";
+    private static String filenameSelfUnsuited = REPORT_PATH+"cribWeightsSelfUnsuited";
+    private static String filenameOppUnsuited = REPORT_PATH+"cribWeightsOppUnsuited";
     
-    static boolean vetoUseDataForReal = false;
-     static boolean trollWriter=false;
     
-    public static void megaAnalysis(){
-        vetoUseDataForReal = false;
-        for (int i=0;i<7;i++){
+    //static boolean vetoUseDataForReal = false;
+    static boolean trollWriter=false;
+    
+    private static String reportInfo = REPORT_PATH+"reportInfo";
+    
+    
+    
+    public static void megaAnalysis(int stop){
+        for (int i=0;i<stop;i++){
             int a=i-1;
             float[][] weights;
             if (i>0){
@@ -57,7 +67,7 @@ class Database {
                 
             }else
                 weights=UnsuitedMeths.bigShitt(null,false,i);
-            
+         
             Database.writeCribUnsuitedFile(weights, false, i);
             
             if (i>0){
@@ -68,13 +78,31 @@ class Database {
                 weights=UnsuitedMeths.bigShitt(null,true,i);
             Database.writeCribUnsuitedFile(weights, true, i);
         }
+        editIterFile(stop);
+    }
+    private static void editIterFile(int stop){
+        String filename=Database.reportInfo;
+        PrintWriter writer;
+
+
+        //Write 
+        try {
+            writer = new PrintWriter(filename, "UTF-8");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+            Date date = new Date();  
+            writer.println("Last iterating analysis time: "+formatter.format(date));
+            writer.println("Last iterating analysis number: "+(stop-1));
+
+            writer.close();
+        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+            System.out.println("Error somewhere");
+        }
+
     }
 
     public static void proceed() {
         createPascal();
         create5ScoreList();
-        //readCribFile(cribWeightsSelf);
-        //readCribFile(cribWeightsOpp); 
     }
     public static float [][] readCribSelfFile(int level){
         return readCribFile(cribWeightsSelf,level);
@@ -303,28 +331,24 @@ class Database {
     }
 
     static float[][] getCopyOfSuitedCribData(boolean selfCrib) {
-        if(!Database.vetoUseDataForReal)
-            return null;
         
         if (selfCrib){
-            if (ssFill)
+            //if (ssFill)
                 return cribWeightsSelf; 
-            return null;
+            //return null;
         }
-        if (osFill)
+        //if (osFill)
             return cribWeightsOpp;
-        return null;
+        //return null;
     }
     static float[][] getCopyOfUnsuitedCribData(boolean selfCrib) {
-        if(!Database.vetoUseDataForReal)
-            return null;
         if (selfCrib){
-            if (suFill)
+            //if (suFill)
                 return cribWeightsSelfUnsuited; 
-            return null;
+            //return null;
         }
-        if (ouFill)
+        //if (ouFill)
             return cribWeightsOppUnsuited;
-        return null;     
+        //return null;     
     }
 }

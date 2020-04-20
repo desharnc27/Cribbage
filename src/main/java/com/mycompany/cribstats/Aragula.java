@@ -14,11 +14,11 @@ import java.util.Arrays;
 
 /**
  * This class contains other basic methods used in this project.
+ * 
  * @author desharnc27
  */
 public class Aragula {
 
-    //intSorting
     /**
      * This method swaps two elements in an array of int
      *

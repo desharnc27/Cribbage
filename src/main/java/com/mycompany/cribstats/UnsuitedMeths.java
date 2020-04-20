@@ -8,21 +8,38 @@ package com.mycompany.cribstats;
 import java.util.Arrays;
 
 /**
- *
+ * This class contains functions for cribbage calculations that keep track only of the numbers of the cards, no their suit.
+ * 
+ * This leads to some inaccuracy in the results, but is necessary to speed up calculations.
+ * Iterating on all C(52,6) combinations of 6 cards and find, for each one, the best discard option would be way too long.
+ * Taking in account only the numbers, there is no more than (19,6) combinations to iterate on, which still take more than a minute.
+ * 
+ * Because of its inaccuracies, this class is only used to produce statistics on what
+ * the opponent could discard. Then class DecisionMaker uses them to make an accurate choice.
+ * 
  * @author desharnc27
  */
 public class UnsuitedMeths {
+    
+    /**
+     * This function returns a CCHBunch containing relevant choices for a crib discarding decision making.
+     *
+     * @param cards the sorted array of length 6 containing the cards of the combination
+     * @param myCrib true if the user has the crib, false otherwise
+     * @return the CCHBunch containing relevant discarding choices.
+     */
 
     public static CCHBunch getChoiceF6(int[] cards, boolean myCrib) {
         return getChoiceF6(cards, myCrib, null);
     }
 
     /**
-     * Returns the TODO
+     * This function returns a CCHBunch containing relevant choices for a crib discarding decision making.
      *
-     * @param cards
-     * @param myCrib
-     * @return
+     * @param cards the sorted array of length 6 containing the cards of the combination
+     * @param myCrib true if the user has the crib, false otherwise
+     * @param cribstats preexisting stats (TODOsee) on what the other player may put in the crib, null if none. 
+     * @return the CCHBunch containing relevant discarding choices.
      */
     public static CCHBunch  getChoiceF6(int[] cards, boolean myCrib, float[][] cribstats) {
         int chosenCards[] = new int[4];
@@ -51,7 +68,7 @@ public class UnsuitedMeths {
 
                 float handEval = averageHandScore(chosenCards, ridCards);
 
-                float prob2CribSameSuit = twadocrinian(ridCards, chosenCards, myCrib);
+                float prob2CribSameSuit = tossProbSameSuit(ridCards, chosenCards, myCrib);
 
                 float cribEval;
 
@@ -111,7 +128,6 @@ public class UnsuitedMeths {
      */
     public static NumCombo[] fill5() {
 
-        //C(4+13-1,13-1)
         int comb4Count = CombMeths.combine(4 + 13 - 1, 13 - 1);
         NumCombo res[] = new NumCombo[13 * comb4Count];
         int[] combId = new int[4];
@@ -134,40 +150,7 @@ public class UnsuitedMeths {
         return res;
     }
 
-    /*public static void getDumps() {
-        int[] combId = new int[6];
-        int[] numbers = new int[6];
-        int[] ridCards = new int[2];
-        int[] chosenCards = new int[4];
-
-        int count = 0;
-        do {
-            count++;
-            for (int i = 0; i < 6; i++) {
-                numbers[i] = combId[i] + 1;
-            }
-            for (int i = 0; i < 6; i++) {
-                for (int j = i + 1; j < 6; j++) {
-
-                    int choIdx = 0;
-                    int rejIdx = 0;
-                    for (int k = 0; k < 6; k++) {
-                        if (k == i || k == j) {
-                            ridCards[rejIdx++] = numbers[k];
-                        } else {
-                            chosenCards[choIdx++] = numbers[k];
-                        }
-                    }
-                    float medHandScore = averageHandScore(chosenCards, ridCards);
-                    float medCribScore = averageCribScore(ridCards, chosenCards);
-                    //TODO:add a peg potential evaluation heuristic?
-
-                }
-            }
-
-        } while (CombMeths.genCombIter(combId, 13));
-        System.out.println(count);
-    }*/
+    
     /**
      * Returns the expected value of a hand
      *
@@ -203,7 +186,7 @@ public class UnsuitedMeths {
     }
 
     /**
-     * returns the mean value of the crib
+     * returns and estimate mean value of the crib
      *
      * @param crib2Cards two cards of crib
      * @param unavail other four cards of hand (cannot be the flip or the two
@@ -281,6 +264,17 @@ public class UnsuitedMeths {
 
     }
 
+    /**
+     * Returns and estimate mean value of the crib
+     *
+     * @param crib2Cards two cards of crib
+     * @param unavail other four cards of hand (cannot be the flip or the two
+     * other cards of the crib)
+     * @param probOfCrib2SameSuit probability that the two cards of the crib
+     * have the same suit
+     * @param cribstats preexisting stats about the two other cards (TODOsee) that the opponent may put in the crib
+     * @return the mean value of the crib
+     */
     private static float averageCribScore(int[] crib2Cards, int[] unavail, float probOfCrib2SameSuit, float[][] cribstats) {
         int[] remainAvail = new int[14];
         for (int k = 1; k < remainAvail.length; k++) {
@@ -414,7 +408,12 @@ public class UnsuitedMeths {
         return ans;
 
     }
-
+    /**
+     * Checks whether or not two sorted arrays of int have a common element
+     * @param t0 a sorted array of int
+     * @param t1 a sorted array of int
+     * @return true if and only if t0 and t1 have a common element
+     */
     public static boolean hasCommonElem(int[] t0, int[] t1) {
         int idx0 = 0;
         int idx1 = 0;
@@ -432,7 +431,11 @@ public class UnsuitedMeths {
             }
         }
     }
-
+    /**
+     * Checks if array of int t is sorted in ascending order
+     * @param t an array of int 
+     * @return true if t is sorted
+     */
     public static boolean sorted(int[] t) {
         for (int i = 1; i < t.length; i++) {
             if (t[i] < t[i - 1]) {
@@ -441,9 +444,14 @@ public class UnsuitedMeths {
         }
         return true;
     }
-
-    public static float twadocrinian(int[] ridCards, int[] chosenCards, boolean myCrib) {
-        //Note: arrays in parameters must be already sorted
+    /**
+     * Returns the probability that the two cards tossed in the crib by the player are of the same suit.
+     * @param ridCards the two numbers tossed in the crib by the player
+     * @param chosenCards the numbers kept in hand by the player
+     * @param myCrib true if the player has the crib for this turn, false otherwise
+     * @return the probability that the two cards tossed in the crib by the player are of the same suit.
+     */
+    public static float tossProbSameSuit(int[] ridCards, int[] chosenCards, boolean myCrib) {
 
         //TODO:delete code, sould not be necessary
         if (!sorted(ridCards) || !sorted(chosenCards)) {
@@ -451,7 +459,7 @@ public class UnsuitedMeths {
         }
 
         if (ridCards[0] == ridCards[1]) {
-            return 0;
+            return 0f;
         }
         if (!myCrib) {
             if (hasCommonElem(ridCards, chosenCards)) {
@@ -476,9 +484,29 @@ public class UnsuitedMeths {
         }
         return (sumRep + 1) / 4.0f;
     }
+    /**
+     * This method  iterates on all 6-cards combinations, finds the resulting choice of discard
+     * for all of them and sums it all to produce arrays containing statistics  about the likehood
+     * of every pair of cards to put in the crib. 
+     * 
+     * It produces both suited and unsuited stats (write in files) and return the unsuited array 
+     * @param myCrib true if the player has the crib
+     * @return the unsuited statistics
+     */
     public static float[][] bigShitt( boolean myCrib) {
         return bigShitt(null, myCrib, 0);
     }
+    /**
+     * This method  iterates on all 6-cards combinations, finds the resulting choice of discard
+     * for all of them and sums it all to produce arrays containing statistics  about the likehood
+     * of every pair of cards to put in the crib.It produces both suited and unsuited stats (write in files) and return the unsuited array 
+     *
+     * @param readUnsuitedScorePairs statistics on what two cards the opponent is likely to discard
+     * @param myCrib true if the player has the crib
+     * @param level level of iteration 
+     * (level 0 means that we assume the opponent discards randomly, level i>0 uses stats of level i-1 for opponent
+     * @return the unsuited statistics
+     */
     public static float[][] bigShitt(float[][] readUnsuitedScorePairs, boolean myCrib, int level) {
         int[] combId = new int[6];
 
@@ -513,10 +541,10 @@ public class UnsuitedMeths {
 
         } while (CombMeths.genCombIter(combId, 13));
 
-        Card[] cards = new Card[52];
+        /*Card[] cards = new Card[52];
         for (int i = 0; i < 52; i++) {
             cards[i] = new Card(i);
-        }
+        }*/
 
         //Write 
         /*for (int i = 0; i < 52; i++) {
@@ -533,7 +561,11 @@ public class UnsuitedMeths {
         return unsuitedScorePairs;
 
     }
-
+    /**
+     * Returns the number of combinations of suited cards that match numbers
+     * @param numbers the numbers of the cards (must be sorted before)
+     * @return the number of combinations of cards that match numbers
+     */
     public static int nbPossOfCardSet(int[] numbers) {
         int coeff = 1;
         int miniCount = 1;
@@ -553,7 +585,7 @@ public class UnsuitedMeths {
     }
 
     /**
-     * returns true if sorted array arr contain numbers that are all different
+     * Returns true if sorted array arr contain numbers that are all different
      * of k and all different between themselves
      *
      * @param arr

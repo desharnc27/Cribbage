@@ -11,9 +11,12 @@ import java.text.DecimalFormat;
  *
  * Contains useful methods for cribbage discard decision making.
  * 
+ * For a user, printDiscardReport is the relevant function to call to get
+ * a discard choice.
+ * 
  * @author desharnc27
  */
-public class StatMaker {
+public class DecisionMaker {
 
     public static void main(String args[]) {
         Labels.proceed();

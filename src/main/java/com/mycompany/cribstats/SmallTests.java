@@ -48,25 +48,22 @@ public class SmallTests {
     public static void main3() {
         int [] cr= new int[]{2,4};
         int [] ha= new int[]{2,4,3,3};
-        System.out.println(UnsuitedMeths.twadocrinian(cr, ha, true));
+        System.out.println(UnsuitedMeths.tossProbSameSuit(cr, ha, true));
 
     }
     public static void main4() {
 
         UnsuitedMeths.bigShitt(true);
-        //Database.vetoUseDataForReal=true;
-        //Database.readUnsuitedCribOppFile();
-        //UnsuitedMeths.bigShitt(true);
         
     }
     public static void main5() {
         //Database.readUnsuitedCribSelfFile();
         //Database.readUnsuitedCribOppFile();
         String []args = new String[]{"y di2 cl-2 d3 c4 c8 c1"};
-        StatMaker.printDiscardReport(args);
+        DecisionMaker.printDiscardReport(args);
     }
     public static void main6() {
-       Database.megaAnalysis();
+       Database.megaAnalysis(3);
     }
     public static void main7() {
        int [] cards=new int[]{2,6,7,9,11,12};

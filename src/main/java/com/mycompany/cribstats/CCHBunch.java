@@ -6,7 +6,11 @@
 package com.mycompany.cribstats;
 
 /**
- *
+ * 
+ * An instance of this class contains relevant discarding choices.
+ * 
+ * Each one is associated with a weight, which compares its relevancy to other relevant choices.
+ * 
  * @author desharnc27
  */
 public class CCHBunch {

@@ -6,10 +6,13 @@
 package com.mycompany.cribstats;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * This class contains methods for counting points of hand and crib.
+ * 
+ * It contains method for both suited and unsuited cards.
+ * 
+ * Note that for unsuited methods, arrays received in parameters must be already sorted.
  * 
  * @author desharnc27
  * 
@@ -55,8 +58,8 @@ public class PointCounting {
         return score;
     }
     /**
-     * Counts how much points are created by series of a set of cards
-     * @param cards the cards 
+     * Counts how much points are created by series of a set of cards 
+     * @param arg the cards
      * @return the points are created by series
      */
     public static int seriePoints(Card[] arg) {
@@ -111,8 +114,8 @@ public class PointCounting {
         return 0;
     }
     /**
-     * Returns the nob point of a combination of cards and flip, if applicable.
-     * @param cards the cards
+     * Returns the nob point of a combination of hand and flip, if applicable.
+     * @param hand the cards in hand
      * @param commo the flip
      * @return 1 if the hand contains a jack of the same suit of the flip
      */
@@ -127,8 +130,9 @@ public class PointCounting {
     }
     /**
      * Returns flush points of a set of cards (bonus for cards of the same suit)
-     * @param cards the cards
+     * @param hand the cards of the hand
      * @param commo the flip
+     * @param isCrib true if the hand is rather a crib, false if it is a real hand
      * @return 5 if all cards (including the flip) are of the same suit,
      * 4 if it is a hand (not a crib) and all cards except the flip are of the same suit, 
      * 0 otherwise
@@ -278,8 +282,8 @@ public class PointCounting {
         return 0;
     }
     /**
-     * Returns the nob point of a combination of cards and flip, if applicable.
-     * @param cards the cards
+     * Returns the nob point of a combination of hand and flip, if applicable.
+     * @param hand the cards of the hand
      * @param commo the flip
      * @return 1 if the hand contains a jack of the same suit of the flip
      */
@@ -296,8 +300,9 @@ public class PointCounting {
     }
     /**
      * Returns flush points of a set of cards (bonus for cards of the same suit)
-     * @param cards the cards
+     * @param hand the cards of the hand
      * @param commo the flip
+     * @param isCrib true if the set of cards is a hand, false if it is a crib
      * @return 5 if all cards (including the flip) are of the same suit,
      * 4 if it is a hand (not a crib) and all cards except the flip are of the same suit, 
      * 0 otherwise

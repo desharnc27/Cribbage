@@ -6,7 +6,7 @@
 package com.mycompany.cribstats;
 
 /**
- * This method
+ * This class contains combinatorial functions
  *
  * @author desharnc27
  */

@@ -43,6 +43,9 @@ public class Labels {
     }
     /**
      * Prints a String representation of a hand (with specified flip) and its score
+     * @param commo the flip
+     * @param hand the cards of the hand
+     * @param score the score
      */
     public static void print(Card commo, Card[] hand, int score) {
         System.out.print(commo.verbos()+",,");
@@ -54,6 +57,7 @@ public class Labels {
     }
     /**
      * Prints a String representation of a set of cards.
+     * @param hand the cards of the hand
      */
     public static void print(Card[] hand) {
         for (int i=0;i<hand.length;i++)
@@ -63,6 +67,7 @@ public class Labels {
     }
     /**
      * Returns a String representation of a set of cards.
+     * @param arr an array of cards
      * @return a String representation of a set of cards.
      */
     public static String verboArr(Card[] arr){
@@ -73,8 +78,9 @@ public class Labels {
         
     }
     /**
-     * Returns a String representation of a set of cards.
-     * @return a String representation of a set of cards.
+     * Returns a String representation of a set of unsuited cards.
+     * @param arr the array containing the unsuited cards
+     * @return a String representation of a set of unsuited cards.
      */
     public static String verboArr(int[] arr){
         String res=arr[0]+"";

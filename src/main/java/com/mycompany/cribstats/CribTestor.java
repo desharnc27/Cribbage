@@ -9,7 +9,7 @@ package com.mycompany.cribstats;
 
 /**
  * 
- * Main class for tests
+ *  Testing class
  * 
  * @author desharnc27
  * 
@@ -22,6 +22,6 @@ public class CribTestor {
         }
         
         Labels.proceed();
-        StatMaker.printDiscardReport(args);
+        DecisionMaker.printDiscardReport(args);
     }
 }

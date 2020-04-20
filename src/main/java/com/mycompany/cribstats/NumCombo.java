@@ -6,10 +6,16 @@
 package com.mycompany.cribstats;
 
 /**
- *
+ * An instance of this class contains the score of a combination of a hand and a flip.
+ * 
+ * Data is unsuited, so only an estimation is performed for points related to suit (flush and nob)
+ * 
+ * Saving an array of all possible Numcombos is usefull because the score of a single one can
+ * be requested many times, so it avoids redoing calculations.
+ * 
  * @author desharnc27
  */
-class NumCombo {
+public class NumCombo {
 
     int commo;
     int[] hand;
