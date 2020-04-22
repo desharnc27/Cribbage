@@ -104,6 +104,42 @@ class Database {
         createPascal();
         create5ScoreList();
     }
+    public static void loadLatestStats() {
+        int levMax=getLatestLevel();
+        readCribSelfFile(levMax);
+        readCribOppFile(levMax);
+        readUnsuitedCribSelfFile(levMax);
+        readUnsuitedCribOppFile(levMax);      
+    }
+    //Change please!!!
+    public static int getLatestLevel(){
+        String filename=reportInfo;
+        File file;
+        BufferedReader br;
+        file = new File(filename);
+        String line;
+        int res=0;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            int idLine=0;
+            while ((line = br.readLine()) != null) {
+                String [] sep=line.split(": ");
+                if (idLine==1){
+                    res=Integer.parseInt(sep[sep.length-1]);
+                    break;
+                    
+                }
+                idLine++;
+
+            }
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("file " + filename + " not found");
+        } catch (IOException ex) {
+            System.out.println("problem while reading " + filename);
+        }
+        return res;
+    }
     public static float [][] readCribSelfFile(int level){
         return readCribFile(cribWeightsSelf,level);
         //ssFill=true;
@@ -148,7 +184,7 @@ class Database {
             System.out.println("problem while reading " + filename);
         }
         
-        Card []cards=new Card[52];
+        /*Card []cards=new Card[52];
         for (int i=0;i<52;i++)         
             cards[i]=new Card(i);
         for (int i = 0; i < 52; i++) {
@@ -158,7 +194,7 @@ class Database {
                 System.out.print(weights[i][j]);
                 System.out.println();
             }
-        }
+        }*/
         //fillUnsuitedCrib(weights);
         return weights;
     }

@@ -17,7 +17,8 @@ import java.text.DecimalFormat;
  * @author desharnc27
  */
 public class DecisionMaker {
-
+    
+    public static boolean debugEqualizer=false;
     public static void main(String args[]) {
         Labels.proceed();
         printDiscardReport(args);
@@ -26,7 +27,8 @@ public class DecisionMaker {
     /**
      * Prints discard report, which contains the expected score of every choice of
      * hand, plus or minus (depending on if player has crib or not) the expected
-     * score of the resulting crib
+     * score of the resulting crib. TODOtemp: now prints both 1 with stats use 2 without stat use
+     * 
      *
      * @param stArr String array. atArr[0] must contain "yes" ("no") if the
      * player has (does not have) the crib. Other entries of stArr are the
@@ -36,7 +38,7 @@ public class DecisionMaker {
      */
     public static void printDiscardReport(String[] stArr) {
         if (stArr.length == 0) {
-            stArr = new String[]{"c6 s6 h6 d6 hK c9"};
+            stArr = new String[]{"y s1 d3 h7 c8 s9 dK"};
         }
         if (stArr.length == 1) {
             stArr = stArr[0].split(" ");
@@ -49,7 +51,32 @@ public class DecisionMaker {
         String[] stArrCards = new String[stArr.length - 1];
         System.arraycopy(stArr, 1, stArrCards, 0, stArrCards.length);
         int[] ids = Labels.verboToIds(stArrCards);
-        printDiscardReport(myCrib, ids);
+        //debugEqualizer=false;
+        //printDiscardReport(myCrib, ids,true);
+        //System.out.println("-------------");
+        //System.out.println("-------------");
+        //debugEqualizer=true;
+        printDiscardReport(myCrib, ids,true);
+        System.out.println("-------------");
+        System.out.println("-------------");
+        printDiscardReport(myCrib, ids,false);
+    }
+    /**
+     * Prints discard report, which contains the expected score of every choice of
+     * hand, plus or minus (depending on if player has crib or not) the expected
+     * score of the resulting crib.
+     *
+     * @param myCrib true if the player has the crib, false otherwise
+     * @param ids ids of the 6 initial cards
+     */
+    public static void printDiscardReport(boolean myCrib, int[] ids,boolean useStats) {
+        if (!useStats){
+            printDiscardReport(myCrib, ids, null);
+            return;
+        }
+        Database.loadLatestStats();
+        float [][] cribCoeffs=Database.getCopyOfSuitedCribData(!myCrib);
+        printDiscardReport(myCrib, ids, cribCoeffs);
     }
 
     /**
@@ -60,11 +87,10 @@ public class DecisionMaker {
      * @param myCrib true if the player has the crib, false otherwise
      * @param ids ids of the 6 initial cards
      */
-    public static void printDiscardReport(boolean myCrib, int[] ids) {
+    public static void printDiscardReport(boolean myCrib, int[] ids, float [][] cribCoeffs) {
         
-        float [][] cribCoeffs;
         //if (Database.containsSuitedCribData()){
-        cribCoeffs=Database.getCopyOfSuitedCribData(!myCrib);
+        
         //}
         //if (cribCoeffs!=null)
         //    clearCribStatsFromUnavails(cribCoeffs,ids);
@@ -320,6 +346,9 @@ public class DecisionMaker {
                     crib[3] = new Card(k); 
                     Card commo = new Card(i);
                     float score = PointCounting.countPoints(commo, crib, true);
+                    //if (debugEqualizer)
+                    //    coeff=1;
+                    
                     sumScore += score*coeff;
                     sumCoeff += coeff;
 

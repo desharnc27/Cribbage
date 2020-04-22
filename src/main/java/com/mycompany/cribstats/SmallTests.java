@@ -59,6 +59,8 @@ public class SmallTests {
     public static void main5() {
         //Database.readUnsuitedCribSelfFile();
         //Database.readUnsuitedCribOppFile();
+        Database.loadLatestStats();
+        
         String []args = new String[]{"y di2 cl-2 d3 c4 c8 c1"};
         DecisionMaker.printDiscardReport(args);
     }

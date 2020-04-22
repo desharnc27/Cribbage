@@ -18,7 +18,7 @@ public class CribTestor {
     public static void main(String args[]) {
         
         if (args.length==0){
-            args = new String[]{"y c4 d4 d5 s5 s7 h7"};
+            args = new String[]{"y h1 h3 h4 h5 c2 dK"};
         }
         
         Labels.proceed();
