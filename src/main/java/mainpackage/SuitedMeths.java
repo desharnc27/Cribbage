@@ -7,6 +7,7 @@ package mainpackage;
 
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 /**
  *
@@ -20,8 +21,8 @@ import java.text.DecimalFormat;
 public class SuitedMeths {
     
     public static boolean debugEqualizer=false;
-    public static void main(String args[]) {
-        Labels.proceed();
+    public static void main(String args[]) throws CribbageException {
+        DataForStrings.proceed();
         printDiscardReport(args);
     }
 
@@ -37,7 +38,7 @@ public class SuitedMeths {
      * suit-number. Example : "yes sp-3 sp-6 di-8 cl-K cl-A cl-T"
      *
      */
-    public static void printDiscardReport(String[] stArr) {
+    public static void printDiscardReport(String[] stArr) throws CribbageException {
         if (stArr.length == 0) {
             stArr = new String[]{"y s1 d3 h7 c8 s9 dK"};
         }
@@ -48,10 +49,32 @@ public class SuitedMeths {
         boolean myCrib = false;
         if (cHasCrib == 'y') {
             myCrib = true;
+        }else if(cHasCrib != 'n'){
+            String message="the leftmost paramter must be y or n, depending on if you have the crib";
+            throw new CribbageException(message);
         }
         String[] stArrCards = new String[stArr.length - 1];
         System.arraycopy(stArr, 1, stArrCards, 0, stArrCards.length);
-        int[] ids = Labels.verboToIds(stArrCards);
+        int[] ids = DataForStrings.verboToIds(stArrCards);
+        
+        if (ids.length!=6){
+            String message="the number of cards must be exactly 6";
+            throw new CribbageException(message);
+        }
+        for(int i=0;i<ids.length;i++){
+            if (ids[i]==-1){
+                String message=stArrCards[i]+" is not a valid card";
+                throw new CribbageException(message);
+            }
+        }
+        for (int i=0;i<6;i++)
+            for (int j=1+i;j<6;j++){
+                if (ids[i]==ids[j]){
+                    String message="the hand you proposed has identical cards at indexes "+i+" and "+j;
+                    throw new CribbageException(message);
+                }
+            }
+        
         //debugEqualizer=false;
         //printDiscardReport(myCrib, ids,true);
         //System.out.println("-------------");
@@ -69,14 +92,17 @@ public class SuitedMeths {
      *
      * @param myCrib true if the player has the crib, false otherwise
      * @param ids ids of the 6 initial cards
+     * @param useStats false if the user wants the program to assume that the opponent puts
+     * random cards (uniformly) in the crib, true if the program uses statistics 
+     * on the opponent's discarding behavior.
      */
     public static void printDiscardReport(boolean myCrib, int[] ids,boolean useStats) {
         if (!useStats){
             printDiscardReport(myCrib, ids, null);
             return;
         }
-        Database.loadLatestStats();
-        float [][] cribCoeffs=Database.getCopyOfSuitedCribData(!myCrib);
+        DataForStatFiles.loadLatestStats();
+        float [][] cribCoeffs=DataForStatFiles.getCopyOfSuitedCribData(!myCrib);
         printDiscardReport(myCrib, ids, cribCoeffs);
     }
 
@@ -87,10 +113,11 @@ public class SuitedMeths {
      *
      * @param myCrib true if the player has the crib, false otherwise
      * @param ids ids of the 6 initial cards
+     * @param cribCoeffs statistics on opponent's discarding behavior, null if unused
      */
     public static void printDiscardReport(boolean myCrib, int[] ids, float [][] cribCoeffs) {
         
-        //if (Database.containsSuitedCribData()){
+        //if (DataForStatFiles.containsSuitedCribData()){
         
         //}
         //if (cribCoeffs!=null)
@@ -104,7 +131,7 @@ public class SuitedMeths {
         }
 
         String[] info = new String[15];
-        int[] permArr = Aragula.idPermArray(15);
+        int[] permArr = GeneralMeths.idPermArray(15);
         Double[] score = new Double[15];
 
         int step = 0;
@@ -134,16 +161,16 @@ public class SuitedMeths {
                     cribEval *= -1;
                 }
                 score[step] = handEval + cribEval;
-                info[step] = Labels.verboArr(chosenCards);
-                info[step] += " " + Labels.df(2, handEval);
+                info[step] = DataForStrings.verboArr(chosenCards);
+                info[step] += " " + DataForStrings.df(2, handEval);
                 info[step] += "   ///   ";
-                info[step] += Labels.verboArr(ridCards);
-                info[step] += " " + Labels.df(2, cribEval) + " :    ";
-                info[step] += Labels.df(2, handEval + cribEval);
+                info[step] += DataForStrings.verboArr(ridCards);
+                info[step] += " " + DataForStrings.df(2, cribEval) + " :    ";
+                info[step] += DataForStrings.df(2, handEval + cribEval);
                 step++;
             }
         }
-        Aragula.quickSort(score, permArr);
+        GeneralMeths.quickSort(score, permArr);
 
         for (int i = 14; i >= 0; i--) {
             System.out.println(info[permArr[i]]);
@@ -156,7 +183,7 @@ public class SuitedMeths {
      * values.
      */
     public static void main0() {
-        Labels.proceed();
+        DataForStrings.proceed();
         Card[] cards = new Card[52];
         for (int i = 0; i < cards.length; i++) {
             cards[i] = new Card(i);
@@ -187,7 +214,7 @@ public class SuitedMeths {
                     && iter[1] == 1
                     && iter[2] == 2
                     && iter[3] == 3) {
-                Labels.print(hand);
+                DataForStrings.print(hand);
                 System.out.println("Total: " + sumScore / 48.0);
             }
 

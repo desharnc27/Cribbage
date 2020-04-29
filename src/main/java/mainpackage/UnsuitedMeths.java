@@ -58,7 +58,7 @@ public class UnsuitedMeths {
         int ridCards[] = new int[2];
 
         String[] info = new String[15];
-        int[] permArr = Aragula.idPermArray(15);
+        int[] permArr = GeneralMeths.idPermArray(15);
         Float[] score = new Float[15];
 
         CribChoiceHeuri[] allChoices = new CribChoiceHeuri[15];
@@ -99,12 +99,12 @@ public class UnsuitedMeths {
                     SmallTests.println(ridCards);
                 }
                 score[noCombo] = handEval + cribEval;
-                info[noCombo] = Labels.verboArr(chosenCards);
-                info[noCombo] += " " + Labels.df(2, handEval);
+                info[noCombo] = DataForStrings.verboArr(chosenCards);
+                info[noCombo] += " " + DataForStrings.df(2, handEval);
                 info[noCombo] += "   ///   ";
-                info[noCombo] += Labels.verboArr(ridCards);
-                info[noCombo] += " " + Labels.df(2, cribEval) + " :    ";
-                info[noCombo] += Labels.df(2, handEval + cribEval);
+                info[noCombo] += DataForStrings.verboArr(ridCards);
+                info[noCombo] += " " + DataForStrings.df(2, cribEval) + " :    ";
+                info[noCombo] += DataForStrings.df(2, handEval + cribEval);
 
                 allChoices[noCombo] = new CribChoiceHeuri(ridCards, prob2CribSameSuit);
                 noCombo++;
@@ -113,7 +113,7 @@ public class UnsuitedMeths {
 
         //Second step: sorting by scores. 
         //permArr keeps track of the initial index of every number in scores
-        Aragula.quickSort(score, permArr);
+        GeneralMeths.quickSort(score, permArr);
 
         for (int i = 14; i >= 0; i--) {
             //System.out.println(info[permArr[i]]);
@@ -175,10 +175,10 @@ public class UnsuitedMeths {
      * @return an array containing all possibilities of hand-flip and their
      * exact value
      */
-    public static NumCombo[] fill5() {
+    public static UnsuitedHFCombo[] fill5() {
 
         int comb4Count = CombMeths.combine(4 + 13 - 1, 13 - 1);
-        NumCombo res[] = new NumCombo[13 * comb4Count];
+        UnsuitedHFCombo res[] = new UnsuitedHFCombo[13 * comb4Count];
         int[] combId = new int[4];
 
         int[] numbers;
@@ -191,7 +191,7 @@ public class UnsuitedMeths {
                 for (int i = 0; i < numbers.length; i++) {
                     numbers[i] = combId[i] + 1;
                 }
-                res[idx] = new NumCombo(commo, numbers);
+                res[idx] = new UnsuitedHFCombo(commo, numbers);
                 count++;
                 idx++;
             } while (CombMeths.genCombIter(combId, 13));
@@ -226,7 +226,7 @@ public class UnsuitedMeths {
                 continue;
             }
             int idx5 = getIdx5(k, chosenCards);
-            sumScore += DataNumbers.getScore5(idx5) * coeffProb;
+            sumScore += DataForNumbers.getScore5(idx5) * coeffProb;
             sumCoeff += coeffProb;
 
         }
@@ -286,8 +286,8 @@ public class UnsuitedMeths {
                         coeff /= 2;
                     }
                     int idx5 = getIdx5(i, crib);
-                    sumScore += DataNumbers.getScore5WithoutFlush(idx5) * coeff;
-                    sumScore += PointCounting.specialFlush(i, crib2Cards, j, k, probOfCrib2SameSuit);
+                    sumScore += DataForNumbers.getScore5WithoutFlush(idx5) * coeff;
+                    sumScore += PointCounting.specialFlushPoints(i, crib2Cards, j, k, probOfCrib2SameSuit);
                     sumCoeff += coeff;
                     if (j == k) {
                         coeff *= 2;
@@ -372,10 +372,10 @@ public class UnsuitedMeths {
                     Arrays.sort(crib);
                     int idx5 = getIdx5(i, crib);
 
-                    //sumScore += PointCounting.specialFlush(i,crib2Cards,j,k,probOfCrib2SameSuit);
+                    //sumScore += PointCounting.specialFlushPoints(i,crib2Cards,j,k,probOfCrib2SameSuit);
                     //TODO:flushFunky calculation
                     if (k == j) {
-                        sumScore += DataNumbers.getScore5WithoutFlush(idx5) * secondCoeff * cribstats[j - 1][j - 1];
+                        sumScore += DataForNumbers.getScore5WithoutFlush(idx5) * secondCoeff * cribstats[j - 1][j - 1];
                         sumCoeff += cribstats[j - 1][j - 1] * secondCoeff;
                     } else {
 
@@ -385,7 +385,7 @@ public class UnsuitedMeths {
                             //TODO:continue here
                             sumScore += 5 / 16.0f * probOfCrib2SameSuit * v1 * secondCoeff;
                         }
-                        sumScore += DataNumbers.getScore5WithoutFlush(idx5) * secondCoeff * (v0 + v1);
+                        sumScore += DataForNumbers.getScore5WithoutFlush(idx5) * secondCoeff * (v0 + v1);
                         sumCoeff += (v0 + v1) * secondCoeff;
 
                     }
@@ -428,7 +428,7 @@ public class UnsuitedMeths {
         for (int i = 0; i < hwNums.length; i++) {
             hwNums[i] = hand[i] - 1;
         }
-        return getIdxCode(hwNums, 0) + (commo - 1) * DataNumbers.pascal(13 - 1 + 4, 13 - 1);
+        return getIdxCode(hwNums, 0) + (commo - 1) * DataForNumbers.getPascal(13 - 1 + 4, 13 - 1);
     }
 
     /**
@@ -451,7 +451,7 @@ public class UnsuitedMeths {
         for (int i = lastVal; i < nums[idx]; i++) {
             //nums.length-idx-1 quantity of numbers to pick
             //13-i: quantity of available numbers
-            ans += DataNumbers.pascal(nums.length - idx - 1 + 13 - i - 1, nums.length - idx - 1);
+            ans += DataForNumbers.getPascal(nums.length - idx - 1 + 13 - i - 1, nums.length - idx - 1);
         }
         ans += getIdxCode(nums, idx + 1);
         return ans;
@@ -555,8 +555,8 @@ public class UnsuitedMeths {
      * @param myCrib true if the player has the crib
      * @return the unsuited statistics
      */
-    public static float[][] bigShitt(boolean myCrib) {
-        return bigShitt(null, myCrib, 0);
+    public static float[][] analysisOfAll6Combos(boolean myCrib) {
+        return analysisOfAll6Combos(null, myCrib, 0);
     }
 
     /**
@@ -574,13 +574,13 @@ public class UnsuitedMeths {
      * opponent
      * @return the unsuited statistics
      */
-    public static float[][] bigShitt(float[][] readUnsuitedScorePairs, boolean myCrib, int level) {
+    public static float[][] analysisOfAll6Combos(float[][] readUnsuitedScorePairs, boolean myCrib, int level) {
         int[] combId = new int[6];
 
         float[][] arrOfScorePairs = new float[52][52];
         float[][] unsuitedScorePairs = new float[13][13];
         //float[][] readUnsuitedScorePairs = null;
-        //readUnsuitedScorePairs=Database.getCopyOfUnsuitedCribData(!myCrib);
+        //readUnsuitedScorePairs=DataForStatFiles.getCopyOfUnsuitedCribData(!myCrib);
 
         do {
             if (combId[0] == combId[4] || combId[1] == combId[5]) {
@@ -618,8 +618,8 @@ public class UnsuitedMeths {
                 System.out.println();
             }
         }*/
-        Database.writeCribFile(arrOfScorePairs, myCrib, level);
-        Database.writeCribUnsuitedFile(unsuitedScorePairs, myCrib, level);
+        DataForStatFiles.writeCribFile(arrOfScorePairs, myCrib, level);
+        DataForStatFiles.writeCribUnsuitedFile(unsuitedScorePairs, myCrib, level);
         System.out.println("Terminated for: " + myCrib + "," + level);
         return unsuitedScorePairs;
 

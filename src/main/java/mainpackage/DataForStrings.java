@@ -16,7 +16,7 @@ package mainpackage;
  * 
  * 
  */
-public class Labels {
+public class DataForStrings {
     
     /**
      * String representation of all card numbers
@@ -175,7 +175,14 @@ public class Labels {
             char nuc = cs[i].charAt(cs[i].length() - 1);
             int suit = suitEncode(cha);
             int num = numEncode(nuc);
-            ids[i] = Card.suitNumToId(suit, num);
+            /*if (suit==-1){
+                String message="Invalid suit "+cha+" for card "+cs[i]+"";
+                throw(new Exception(message));
+            }*/
+            if (suit==-1||num==-1)
+                ids[i]=-1;
+            else
+                ids[i] = Card.suitNumToId(suit, num);
 
         }
         return ids;

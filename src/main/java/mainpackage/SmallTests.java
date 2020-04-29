@@ -5,6 +5,9 @@
  */
 package mainpackage;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 
 /**
@@ -16,7 +19,7 @@ public class SmallTests {
 
     public static void main0() {
         int[] comgen = new int[7];
-        DataNumbers.createPascal();
+        DataForNumbers.createPascal();
         do {
             System.out.print(UnsuitedMeths.getIdxCode(comgen, 0) + ": ");
             println(comgen);
@@ -56,19 +59,22 @@ public class SmallTests {
     }
     public static void main4() {
 
-        UnsuitedMeths.bigShitt(true);
+        UnsuitedMeths.analysisOfAll6Combos(true);
         
     }
     public static void main5() {
-        //Database.readUnsuitedCribSelfFile();
-        //Database.readUnsuitedCribOppFile();
-        Database.loadLatestStats();
+        //DataForStatFiles.readUnsuitedCribSelfFile();
+        //DataForStatFiles.readUnsuitedCribOppFile();
+        DataForStatFiles.loadLatestStats();
         
         String []args = new String[]{"y di2 cl-2 d3 c4 c8 c1"};
-        SuitedMeths.printDiscardReport(args);
+        try {
+            SuitedMeths.printDiscardReport(args);
+        } catch (CribbageException ex) {
+        }
     }
     public static void main6() {
-       Database.megaAnalysis(4);
+       DataForStatFiles.megaAnalysis(4);
     }
     public static void main7() {
        int [] cards=new int[]{1,1,4,4,10,12};
@@ -77,8 +83,8 @@ public class SmallTests {
     }
 
     public static void main(String[] args) {
-        DataNumbers.proceed();
-        Labels.proceed();
+        DataForNumbers.proceed();
+        DataForStrings.proceed();
         try {
             main6();
         } catch (Exception e) {

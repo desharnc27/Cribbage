@@ -21,7 +21,7 @@ import java.util.Date;
  *
  * @author desharnc27
  */
-public class Database {
+public class DataForStatFiles {
     
     private static final String REPORT_PATH="weightReports/";
     
@@ -53,7 +53,7 @@ public class Database {
     /**
      * Fills all the statistic files up to stop exclusively.
      * 
-     * Each call to bigShitt takes a minute to complete, which means that 
+     * Each call to analysisOfAll6Combos takes a minute to complete, which means that 
      * The this function takes a bit more than 2*stop minutes to complete.
      * 
      * If user interrupts (not recommended) the execution, it would do less harm to interrupt
@@ -70,21 +70,21 @@ public class Database {
             float[][] weights;
             if (i>0){
                 
-                Database.readUnsuitedCribSelfFile(a);
-                weights=UnsuitedMeths.bigShitt(cribWeightsSelfUnsuited,false,i);
+                DataForStatFiles.readUnsuitedCribSelfFile(a);
+                weights=UnsuitedMeths.analysisOfAll6Combos(cribWeightsSelfUnsuited,false,i);
                 
             }else
-                weights=UnsuitedMeths.bigShitt(null,false,i);
+                weights=UnsuitedMeths.analysisOfAll6Combos(null,false,i);
          
-            Database.writeCribUnsuitedFile(weights, false, i);
+            DataForStatFiles.writeCribUnsuitedFile(weights, false, i);
             
             if (i>0){
                 
-                Database.readUnsuitedCribOppFile(a);
-                weights=UnsuitedMeths.bigShitt(cribWeightsOppUnsuited,true,i);
+                DataForStatFiles.readUnsuitedCribOppFile(a);
+                weights=UnsuitedMeths.analysisOfAll6Combos(cribWeightsOppUnsuited,true,i);
             }else
-                weights=UnsuitedMeths.bigShitt(null,true,i);
-            Database.writeCribUnsuitedFile(weights, true, i);
+                weights=UnsuitedMeths.analysisOfAll6Combos(null,true,i);
+            DataForStatFiles.writeCribUnsuitedFile(weights, true, i);
         }
         editIterFile(stop);
     }
@@ -94,7 +94,7 @@ public class Database {
      * @param stop last level overwritten by megaAnalysis(...)
      */
     private static void editIterFile(int stop){
-        String filename=Database.reportInfo;
+        String filename=DataForStatFiles.reportInfo;
         PrintWriter writer;
 
 
@@ -114,7 +114,7 @@ public class Database {
     }
     
     /**
-     * Loads the latest stats in the Database
+     * Loads the latest stats in the DataForStatFiles
      * 
      * Latest stats are in the files that have the level indicated in the info report
      */
@@ -158,7 +158,7 @@ public class Database {
         return res;
     }
     /**
-     * Reads a cribstat file (self), both stores its data in the Database and returns it.
+     * Reads a cribstat file (self), both stores its data in the DataForStatFiles and returns it.
      * @param level the level of the file to read 
      * @return the read data
      */
@@ -167,7 +167,7 @@ public class Database {
         //ssFill=true;
     }
     /**
-     * Reads a cribstat file (opp), both stores its data in the Database and returns it.
+     * Reads a cribstat file (opp), both stores its data in the DataForStatFiles and returns it.
      * @param level the level of the file to read 
      * @return the read data
      */
@@ -234,7 +234,7 @@ public class Database {
         return weights;
     }
     /**
-     * Reads an unsuited  cribstat file (self), both stores its data in the Database and returns it.
+     * Reads an unsuited  cribstat file (self), both stores its data in the DataForStatFiles and returns it.
      * @param level the level of the file to read 
      * @return the read data
      */
@@ -243,7 +243,7 @@ public class Database {
         //suFill=true;
     }
     /**
-     * Reads an unsuited  cribstat file (opp), both stores its data in the Database and returns it.
+     * Reads an unsuited  cribstat file (opp), both stores its data in the DataForStatFiles and returns it.
      * @param level the level of the file to read 
      * @return the read data
      */
@@ -396,9 +396,9 @@ public class Database {
 
     
     /**
-     * returns the cribstats currently loaded in Database.
+     * returns the cribstats currently loaded in DataForStatFiles.
      * @param selfCrib true to return self stats, false to return opp stats
-     * @return the cribstats currently loaded in Database.
+     * @return the cribstats currently loaded in DataForStatFiles.
      */
     public static float[][] getCopyOfSuitedCribData(boolean selfCrib) {
         
@@ -412,9 +412,9 @@ public class Database {
         //return null;
     }
     /**
-     * returns the unsuited cribstats currently loaded in Database.
+     * returns the unsuited cribstats currently loaded in DataForStatFiles.
      * @param selfCrib true to return self stats, false to return opp stats
-     * @return the unsuited cribstats currently loaded in Database.
+     * @return the unsuited cribstats currently loaded in DataForStatFiles.
      */
     static float[][] getCopyOfUnsuitedCribData(boolean selfCrib) {
         if (selfCrib){

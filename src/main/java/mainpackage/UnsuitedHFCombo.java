@@ -17,7 +17,7 @@ package mainpackage;
  * 
  * @author desharnc27
  */
-public class NumCombo {
+public class UnsuitedHFCombo {
 
     int commo;
     int[] hand;
@@ -25,7 +25,7 @@ public class NumCombo {
     float scoreWithoutFlush=0.0f;
     boolean isCrib;
 
-    public NumCombo(int a, int[] b) {
+    public UnsuitedHFCombo(int a, int[] b) {
         commo = a;
         hand = b;
         isCrib=false;

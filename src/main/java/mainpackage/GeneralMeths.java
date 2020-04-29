@@ -18,7 +18,7 @@ import java.util.Arrays;
  * 
  * @author desharnc27
  */
-public class Aragula {
+public class GeneralMeths {
 
     /**
      * Performs print if bool==true

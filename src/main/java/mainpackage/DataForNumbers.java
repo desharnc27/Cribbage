@@ -16,9 +16,9 @@ package mainpackage;
  * 
  * @author desharnc27
  */
-public class DataNumbers {
+public class DataForNumbers {
     private static int[][] pascalTriangle;
-    private static NumCombo[] list5;
+    private static UnsuitedHFCombo[] list5;
     
     
     /**
@@ -60,7 +60,7 @@ public class DataNumbers {
      * @param j
      * @return C(i,j)
      */
-    public static int pascal(int i, int j) {
+    public static int getPascal(int i, int j) {
         return pascalTriangle[i][j];
     }
     /**

@@ -359,7 +359,7 @@ public class PointCounting {
      * @param probOfCrib2SameSuit known probability that the player has discarded 2 cards of the same suit
      * @return expected flush points of a combination having specific properties.
      */
-    public static float specialFlush(int commo, int[] crib2Cards, int j, int k, float probOfCrib2SameSuit) {
+    public static float specialFlushPoints(int commo, int[] crib2Cards, int j, int k, float probOfCrib2SameSuit) {
         
         //Impossible flush if pairs are found
         if (probOfCrib2SameSuit==0.0f)

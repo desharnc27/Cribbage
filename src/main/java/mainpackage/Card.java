@@ -58,7 +58,7 @@ public class Card implements Comparable<Card>{
      * @return the String representation of the suit of the card.
      */
     public String strSuit(){
-        return Labels.strSuit[suit];
+        return DataForStrings.strSuit[suit];
     }
     /**
      * Returns the number of the card
@@ -71,7 +71,7 @@ public class Card implements Comparable<Card>{
      * @return the String representation of the number of the card.
      */
     public String strNum(){
-        return Labels.strNum[num];
+        return DataForStrings.strNum[num];
     }
     /**
      * Returns the String representation of the card.
