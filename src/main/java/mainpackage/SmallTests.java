@@ -74,11 +74,22 @@ public class SmallTests {
         }
     }
     public static void main6() {
-       DataForStatFiles.megaAnalysis(4);
+       DataForStatFiles.megaAnalysis(7);
     }
     public static void main7() {
        int [] cards=new int[]{1,1,4,4,10,12};
        CCHBunch c=UnsuitedMeths.getChoiceF6(cards, false);
+       
+    }
+    public static void main8() {
+       
+       String currentDirectory = System.getProperty("user.dir");
+       System.out.println(currentDirectory);
+       
+    }
+    public static void main9() {
+       
+       DataForStatFiles.createValueFiles();
        
     }
 
@@ -88,7 +99,6 @@ public class SmallTests {
         try {
             main6();
         } catch (Exception e) {
-            System.out.println("here");
             System.out.println(e.getClass());
             System.out.println(e.getMessage());
             StackTraceElement[] ste = e.getStackTrace();

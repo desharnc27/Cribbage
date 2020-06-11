@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import graphics.FrameMain;
 
 
 
@@ -19,7 +20,7 @@ import java.util.Scanner;
  * 
  * Main class for user. 
  * 
- * The must run this file with appropriate arguments (or none for interactive mode) to
+ * The user must run this file with appropriate arguments (or none for interactive mode) to
  * get the analysis of discarding choices he could make.
  * 
  * @author desharnc27
@@ -31,8 +32,15 @@ public class UserDiscardDecisioning {
      * The main
      * @param args arguments (hand for single request, nothing for interactive mode)
      */
-    public static void main(String []args) {
+    
+    public static void doPreOperations(){
+        
         DataForStrings.proceed();
+        DataForNumbers.proceed();
+        DataForStatFiles.proceed();
+    }
+    public static void main(String []args) {
+        doPreOperations();
         if (args.length!=0){
             
             try {
@@ -49,25 +57,15 @@ public class UserDiscardDecisioning {
     /**
      * Prints the input guide
      */
+    public static String getInputGuide() {
+        String text = GeneralMeths.fileToString("inputUserGuide.txt");
+        return text;
+    }
+    /**
+     * Prints the input guide
+     */
     public static void printInputGuide() {
-        String filename="inputUserGuide.txt";
-        File file;
-        BufferedReader br;
-        file = new File(filename);
-        String line;
-        try {
-            br = new BufferedReader(new FileReader(file));
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-
-            }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("The input guide is unavailabe because the file "+file+" is missing");
-        } catch (IOException ex) {
-            System.out.println("The input guie is unavailable for an unknown reason.");
-       
-        }
+        System.out.println(getInputGuide());
     }
     /**
      * Launches the interactive program where the user can ask cribbage hand analysis, 
@@ -84,9 +82,19 @@ public class UserDiscardDecisioning {
                 printInputGuide();
                 continue;
             }
+            if (input.equals("about")){
+                System.out.println(GeneralMeths.fileToString("about_pl.txt"));
+                continue;
+            }
             try{
+                
                 String [] param=input.split(",");
-                SuitedMeths.printDiscardReport(param);
+                UserReport ur=SuitedMeths.printDiscardReport(param);
+                String s=String.join("\n",ur.computeStringArr(true, false));
+                System.out.println(s);
+                ur=SuitedMeths.printDiscardReport(param,false);
+                s=String.join("\n",ur.computeStringArr(true, false));
+                System.out.println(s);
             }catch(CribbageException e){
                 System.out.println(e.getErrorMessage());
                 System.out.println("type \"input-guide\" for help about the input");

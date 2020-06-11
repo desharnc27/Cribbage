@@ -10,6 +10,11 @@ package mainpackage;
  * @author desharnc27
  */
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -758,6 +763,29 @@ public class GeneralMeths {
         return arr;
 
     }*/
+    
+    public static String fileToString(String filename){
+
+        File file;
+        BufferedReader br;
+        file = new File(filename);
+        String line;
+        String res="";
+        try {
+            br = new BufferedReader(new FileReader(file));
+            while ((line = br.readLine()) != null) {
+                res+=line+"\n";
+
+            }
+
+        } catch (FileNotFoundException ex) {
+            return ("Error: the file"+file+" is missing");
+        } catch (IOException ex) {
+            return ("Error: the file"+file+" has an unknown IO problem");
+       
+        }
+        return res;
+    }
 
 
 }

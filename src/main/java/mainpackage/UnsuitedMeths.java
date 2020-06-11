@@ -581,6 +581,12 @@ public class UnsuitedMeths {
         float[][] unsuitedScorePairs = new float[13][13];
         //float[][] readUnsuitedScorePairs = null;
         //readUnsuitedScorePairs=DataForStatFiles.getCopyOfUnsuitedCribData(!myCrib);
+        
+        //int globalCount;
+        //float globalScore;
+        //float globalHandScore;
+        //float globalCribScore;
+        
 
         do {
             if (combId[0] == combId[4] || combId[1] == combId[5]) {
@@ -594,6 +600,9 @@ public class UnsuitedMeths {
             CCHBunch cchb = getChoiceF6(numbers, myCrib, readUnsuitedScorePairs);
             int multicoef = nbPossOfCardSet(numbers);
             cchb.addTo(arrOfScorePairs, unsuitedScorePairs, multicoef);
+            
+            // globalCount++;
+            //CribChoicecchb.getChoice(0);
 
             if (debugPrintChoices) {
                 System.out.println("__-----___------___");
@@ -618,8 +627,18 @@ public class UnsuitedMeths {
                 System.out.println();
             }
         }*/
+        
+        //build single array
+        float []singleWeight=new float[13];
+        for (int i=0;i<13;i++)
+            for (int j=0;j<13;j++){
+                singleWeight[i]+=unsuitedScorePairs[i][j];
+                singleWeight[j]+=unsuitedScorePairs[i][j];
+            }
+        
         DataForStatFiles.writeCribFile(arrOfScorePairs, myCrib, level);
         DataForStatFiles.writeCribUnsuitedFile(unsuitedScorePairs, myCrib, level);
+        DataForStatFiles.writeCribSinglesFile(singleWeight, myCrib, level);
         System.out.println("Terminated for: " + myCrib + "," + level);
         return unsuitedScorePairs;
 
@@ -666,5 +685,33 @@ public class UnsuitedMeths {
         }
         return arr[0] != k;
     }
+    
+    /**
+     * Not supported yet. Should return an evaluation of the expected difference between your peg
+     * performance and your opponent's one
+     * @param cards cards of your hand
+     * @return an evaluation of the expected difference between your peg
+     * performance and your opponent's one
+     */
+    static float computePegHeuri(Card[] cards) {       
+       int [] nums=new int[cards.length];
+       for (int i=0;i<cards.length;i++)
+           nums[i]=cards[i].getNum();
+       return computePegHeuri(nums);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    /**
+     * Not supported yet. Should return an evaluation of the expected difference between your peg
+     * performance and your opponent's one
+     * @param cards unsuited cards of your hand
+     * @return an evaluation of the expected difference between your peg
+     * performance and your opponent's one
+     */
+    static float computePegHeuri(int [] cards) {       
+        
+       return 0f;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 
 }

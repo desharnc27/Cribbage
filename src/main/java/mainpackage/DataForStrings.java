@@ -159,6 +159,16 @@ public class DataForStrings {
         }
         return num;
     }
+    /**
+     * Converts a number into a card symbol
+     * @param i a number
+     * @return its card symbol representation, as a char
+     * 
+     * Ex: symbolOfNum(4) return '4' and symbolOfNum(12) returns 'Q';
+     */
+    public static String symbolOfNum(int i) {
+        return strNum[i];
+    }
 
     /**
      * Converts a String representation of many cards in an array of int (id's)

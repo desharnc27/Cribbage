@@ -6,6 +6,9 @@
 package mainpackage;
 
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
@@ -20,30 +23,38 @@ import java.util.Arrays;
  */
 public class SuitedMeths {
     
-    public static boolean debugEqualizer=false;
+    static boolean debugEqualizer=false;
+    
     public static void main(String args[]) throws CribbageException {
         DataForStrings.proceed();
         printDiscardReport(args);
+    }
+    
+    public static UserReport printDiscardReport(String[] stArr) throws CribbageException {
+        return printDiscardReport(stArr,true);
     }
 
     /**
      * Prints discard report, which contains the expected score of every choice of
      * hand, plus or minus (depending on if player has crib or not) the expected
-     * score of the resulting crib. TODOtemp: now prints both 1 with stats use 2 without stat use
+     * score of the resulting crib.TODOtemp: now prints both 1 with stats use 2 without stat use
      * 
      *
      * @param stArr String array. atArr[0] must contain "yes" ("no") if the
      * player has (does not have) the crib. Other entries of stArr are the
      * strings representing each card of the initial 6-hand. Format of a card:
      * suit-number. Example : "yes sp-3 sp-6 di-8 cl-K cl-A cl-T"
+     * @throws mainpackage.CribbageException
      *
      */
-    public static void printDiscardReport(String[] stArr) throws CribbageException {
-        if (stArr.length == 0) {
-            stArr = new String[]{"y s1 d3 h7 c8 s9 dK"};
+    public static UserReport printDiscardReport(String[] stArr,boolean statUse) throws CribbageException {
+        if (stArr.length == 0 || stArr[0].length()<0) {
+            //the input is no defined
+            String message="no initiallization (no input)";
+            throw new CribbageException(message,true);
         }
         if (stArr.length == 1) {
-            stArr = stArr[0].split(" ");
+            stArr = stArr[0].split(",");
         }
         char cHasCrib = stArr[0].charAt(0);
         boolean myCrib = false;
@@ -80,10 +91,16 @@ public class SuitedMeths {
         //System.out.println("-------------");
         //System.out.println("-------------");
         //debugEqualizer=true;
-        printDiscardReport(myCrib, ids,true);
-        System.out.println("-------------");
-        System.out.println("-------------");
-        printDiscardReport(myCrib, ids,false);
+        if (statUse){
+            System.out.println("Analysis using discarding behavior statistics:");
+            return printDiscardReport(myCrib, ids,true);
+        }else{
+            System.out.println("Analysis using no previous statistics:");
+            return printDiscardReport(myCrib, ids,false);
+        }
+        
+        
+        
     }
     /**
      * Prints discard report, which contains the expected score of every choice of
@@ -96,14 +113,14 @@ public class SuitedMeths {
      * random cards (uniformly) in the crib, true if the program uses statistics 
      * on the opponent's discarding behavior.
      */
-    public static void printDiscardReport(boolean myCrib, int[] ids,boolean useStats) {
+    public static UserReport printDiscardReport(boolean myCrib, int[] ids,boolean useStats) {
         if (!useStats){
-            printDiscardReport(myCrib, ids, null);
-            return;
+            return printDiscardReport(myCrib, ids, null);
         }
-        DataForStatFiles.loadLatestStats();
+        //DataForStatFiles.loadLatestStats();
+        
         float [][] cribCoeffs=DataForStatFiles.getCopyOfSuitedCribData(!myCrib);
-        printDiscardReport(myCrib, ids, cribCoeffs);
+        return printDiscardReport(myCrib, ids, cribCoeffs);
     }
 
     /**
@@ -115,7 +132,7 @@ public class SuitedMeths {
      * @param ids ids of the 6 initial cards
      * @param cribCoeffs statistics on opponent's discarding behavior, null if unused
      */
-    public static void printDiscardReport(boolean myCrib, int[] ids, float [][] cribCoeffs) {
+    public static UserReport printDiscardReport(boolean myCrib, int[] ids, float [][] cribCoeffs) {
         
         //if (DataForStatFiles.containsSuitedCribData()){
         
@@ -131,8 +148,14 @@ public class SuitedMeths {
         }
 
         String[] info = new String[15];
-        int[] permArr = GeneralMeths.idPermArray(15);
-        Double[] score = new Double[15];
+        //int[] permArr = GeneralMeths.idPermArray(15);
+        //Double[] score = new Double[15];
+        
+        Card[][] handMem = new Card[15][4];
+        Card[][] cribMem = new Card[15][2];
+        float[] cribEval = new float[15];
+        float[] handEval = new float[15];
+        float[] pegEval = new float[15];
 
         int step = 0;
         for (int i = 0; i < 6; i++) {
@@ -142,47 +165,86 @@ public class SuitedMeths {
                 int rejIdx = 0;
                 for (int k = 0; k < 6; k++) {
                     if (k == i || k == j) {
-                        ridCards[rejIdx++] = cards[k];
+                        cribMem[step][rejIdx++]=cards[k];
+                        //ridCards[rejIdx++] = cards[k];
                     } else {
-                        chosenCards[choIdx++] = cards[k];
+                        handMem[step][choIdx++]= cards[k];
+                        //chosenCards[choIdx++] = cards[k];
                     }
                 }
+                ridCards=cribMem[step];
+                chosenCards=handMem[step];
 
-                double handEval = computeHandAverage(chosenCards, ridCards);
-                double cribEval;
+                handEval[step] = (float)computeHandAverage(chosenCards, ridCards);
                 if (cribCoeffs==null){
                     //No prexisting stats will be used for calculations
-                    cribEval = computeCribAverage(ridCards, chosenCards);
+                    cribEval[step] = (float)computeCribAverage(ridCards, chosenCards);
                 } else {
                     //Prexisting crib stats in some files will be used for calculations
-                    cribEval = computeCribAverage(ridCards, chosenCards,cribCoeffs);
+                    cribEval[step] = (float)computeCribAverage(ridCards, chosenCards,cribCoeffs);
                 }
                 if (!myCrib) {
-                    cribEval *= -1;
+                    cribEval[step] *= -1;
                 }
-                score[step] = handEval + cribEval;
-                info[step] = DataForStrings.verboArr(chosenCards);
-                info[step] += " " + DataForStrings.df(2, handEval);
-                info[step] += "   ///   ";
-                info[step] += DataForStrings.verboArr(ridCards);
-                info[step] += " " + DataForStrings.df(2, cribEval) + " :    ";
-                info[step] += DataForStrings.df(2, handEval + cribEval);
+                pegEval[step]=UnsuitedMeths.computePegHeuri(chosenCards);
+                //score[step] = handEval + cribEval;
+                //info[step] = DataForStrings.verboArr(chosenCards);
+                //info[step] += " " + DataForStrings.df(2, handEval);
+                //info[step] += "   ///   ";
+                //info[step] += DataForStrings.verboArr(ridCards);
+                //info[step] += " " + DataForStrings.df(2, cribEval) + " :    ";
+                //info[step] += DataForStrings.df(2, handEval + cribEval);
                 step++;
             }
         }
-        GeneralMeths.quickSort(score, permArr);
+        for (int i=0;i<15;i++){
+            if (cribEval[i]<0.000001)
+                System.out.println("Problem 0  in SuitedMeths");
+        }
+        System.out.println("Before creating report: "+cribMem[0][0]);
+        return new UserReport(handMem,cribMem,handEval,cribEval,pegEval);
+        /*GeneralMeths.quickSort(score, permArr);
 
         for (int i = 14; i >= 0; i--) {
             System.out.println(info[permArr[i]]);
         }
+        String resArr[]=new String[15];
+        for (int i = 14; i >= 0; i--) {
+            resArr[15-i-1]=info[permArr[i]];
+        }
+        return String.join("\n", resArr);*/
 
     }
 
-    /**
+    /*
      * Method that iterates on all possible 4-hands, and compute their expected
      * values.
-     */
+     *
     public static void main0() {
+        
+        String filename4=DataForStatFiles.
+        PrintWriter writer;
+        Card[] cards = new Card[52];
+        for (int i = 0; i < 52; i++) {
+            cards[i] = new Card(i);
+        }
+
+        //Write 
+        try {
+            writer = new PrintWriter(filename, "UTF-8");
+            for (int i = 0; i < 52; i++) {
+                for (int j = i + 1; j < 52; j++) {
+                    writer.print(cards[i].verbos() + "," + cards[j].verbos() + ": ");
+                    writer.println(weights[i][j]);
+                }
+            }
+            writer.close();
+        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+            System.out.println("Error somewhere");
+        }
+        
+        
+        
         DataForStrings.proceed();
         Card[] cards = new Card[52];
         for (int i = 0; i < cards.length; i++) {
@@ -221,7 +283,7 @@ public class SuitedMeths {
         } while (CombMeths.combIter(iter, 52));
         System.out.println(debugCount);
     }
-
+    */
     /**
      * Compute the average value of a 4-card hand
      *
