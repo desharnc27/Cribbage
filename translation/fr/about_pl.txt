@@ -1,0 +1,18 @@
+
+Cribbage discard decision maker
+
+Ce projet a pour but d'analyser les choix possibles d'un joueur au cribbage afin d'optimiser ses décisions
+
+Jusqu'à maintenant, seul l'algorithme de choix de discarte est implémenté.
+
+Amélioration possible:
+1.Algorithme de pegging choice.
+2. Estimation de "peg potential" lors de la phase de discarte
+
+
+
+Main: CribTestor.java 
+input: la main du joueur (voir userGuideInput.txt )
+output: valeur espérée de chaque choix de discarte, le tout étant trié du meilleur au pire choix, selon l'algorithme. Plusieurs options possibles en mode interface.
+
+Author: desharnc27

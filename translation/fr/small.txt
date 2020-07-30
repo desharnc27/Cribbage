@@ -1,0 +1,30 @@
+* General
+01 @ Entrez la main à analyser ici.
+02 @ Options
+03 @ Utiliser les statistiques avancées
+04 @ Consider crib
+05 @ Consider peg
+06 @ File
+07 @ Input guide
+08 @ About
+09 @ Theme
+0a @ Dark
+0b @ Light
+* CMD only
+20 @ Or type a command
+21 @ type "input-guide" for help about the input
+22 @ type "exit" to close the programm
+23 @ Voici les commandes de bases:
+24 @ type "lang-xx" to change language to some language xx. Example: lang-fr switches to french. 
+25 @ Error: language $ is unknown or not supported
+* Graph only
+31 @ Language
+* Exceptions
+e0 @ Invalid Cribbage hand input $ d
+e1 @ No input entered
+e2 @ the leftmost paramter must be y or n, depending on if you have the crib or not
+e3 @ the number of cards must be exactly 6
+e4 @ $ n'est pas une carte valide
+e5 @ the hand you proposed has identical cards at indexes $ and $
+e6 @ the number of cards must be exactly 6
+e7 @ the number of cards must be exactly 6
