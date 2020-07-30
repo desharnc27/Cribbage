@@ -779,10 +779,11 @@ public class GeneralMeths {
             }
 
         } catch (FileNotFoundException ex) {
-            return ("Error: the file"+file+" is missing");
+            System.out.println("Error: the file"+file+" is missing");
+            return null;
         } catch (IOException ex) {
-            return ("Error: the file"+file+" has an unknown IO problem");
-       
+            System.out.println("Error: the file"+file+" has an unknown IO problem");
+            return null;
         }
         return res;
     }

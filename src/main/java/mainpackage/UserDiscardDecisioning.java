@@ -74,8 +74,8 @@ public class UserDiscardDecisioning {
     public static void interactiveProgram(){
         Scanner scan = new Scanner(System.in);
         while (true) {
-            System.out.print(Langu.smallText(0x1));
-            System.out.println("("+Langu.smallText(0x20)+")");
+            System.out.print(Langu.smallText("handToAnal"));
+            System.out.println("("+Langu.smallText("orTypeCMD")+")");
             String input = scan.next();
             if (input.equals("exit"))
                 break;
@@ -94,7 +94,7 @@ public class UserDiscardDecisioning {
                 String lang=input.substring(5);
                 boolean success=Langu.setLanguage(lang);
                 if (! success){
-                    System.out.println(Langu.smallTextX(0x25,new String[]{lang}));
+                    System.out.println(Langu.smallTextX("langUnknown",new String[]{lang}));
                 }
                 continue;
             }
@@ -109,10 +109,11 @@ public class UserDiscardDecisioning {
                 System.out.println(s);
             }catch(CribbageException e){
                 System.out.println(e.getErrorMessage());
-                System.out.println(Langu.smallText(0x23));
-                System.out.println(Langu.smallText(0x21));
-                System.out.println(Langu.smallText(0x22));
-                System.out.println(Langu.smallText(0x24));
+                System.out.println(Langu.smallText("hereBasics"));
+                System.out.println(Langu.smallText("typeInputGuide"));    
+                System.out.println(Langu.smallText("typeLang"));
+                System.out.println(Langu.smallText("typeAbout"));
+                System.out.println(Langu.smallText("typeExit"));
                 
             }
             

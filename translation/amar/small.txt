@@ -1,0 +1,40 @@
+
+* General
+
+handToAnal @ Entrez la main à analyser ici.
+
+
+* CMD only
+
+orTypeCMD @ Ou tapez une commande
+typeInputGuide @ tapez "input-guide" pour obtenir de l'information sur les arguments à fournir en entrée.
+typeAbout @ type "about" to know more about this programm.
+typeExit @ type "exit" pour fermer le programme
+hereBasics @ Voici les commandes de bases:
+typeLang @ tapez "lang-xxx" pour passer à un langage xxx. Exemple: lang-fra met le programme en français. 
+langUnknown @ Error: langage $ inconnu ou non supporté.
+
+* Graph only
+
+lang @ Langage
+dataOpt @ Données
+useAdvStats @ Utiliser les statistiques avancées.
+consCrib @ Considérer le crib
+consPeg @ Considérer le peg
+othOpt @ Options
+file @ Fichier
+inputGuide @ Guide d'entrée
+about @ À propos
+theme @ Thème
+dark @ Sombre
+light @ Clair
+
+* Exceptions
+
+errorHand @ Main invalide: $
+errorNoInput @ Aucun paramètre/entrée fourni
+errorLeftParam @ le premier paramètre doit être y or n, indiquant si l'usager a le crib ou pas.
+errorNbCards @ Le nombre de cartes doit être 6.
+errorUnknownCard @ $ n'est pas une carte valide.
+errorDuplicate @ la main proposée possède la même carte aux positions $ et $
+

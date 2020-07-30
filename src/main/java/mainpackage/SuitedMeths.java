@@ -51,7 +51,7 @@ public class SuitedMeths {
         if (stArr.length == 0 || stArr[0].length()<0) {
             //the input is no defined
             //String message="no initiallization (no input)";
-            String message=Langu.smallText(0xe1);
+            String message=Langu.smallText("errorNoInput");
             throw new CribbageException(message,true);
         }
         if (stArr.length == 1) {
@@ -62,7 +62,7 @@ public class SuitedMeths {
         if (cHasCrib == 'y') {
             myCrib = true;
         }else if(cHasCrib != 'n'){
-            String message=Langu.smallText(0xe2);
+            String message=Langu.smallText("errorLeftParam");
             //String message="the leftmost paramter must be y or n, depending on if you have the crib";
             throw new CribbageException(message);
         }
@@ -72,19 +72,19 @@ public class SuitedMeths {
         
         if (ids.length!=6){
             //String message="the number of cards must be exactly 6";
-            String message=Langu.smallText(0xe3);
+            String message=Langu.smallText("errorNbCards");
             throw new CribbageException(message);
         }
         for(int i=0;i<ids.length;i++){
             if (ids[i]==-1){
-                String message=Langu.smallTextX(0xe4,new String[]{stArrCards[i]});
+                String message=Langu.smallTextX("errorUnknownCard",new String[]{stArrCards[i]});
                 throw new CribbageException(message);
             }
         }
         for (int i=0;i<6;i++)
             for (int j=1+i;j<6;j++){
                 if (ids[i]==ids[j]){
-                    String message=Langu.smallTextX(0xe5,new int[]{i,j});;
+                    String message=Langu.smallTextX("errorDuplicate",new int[]{i,j});;
                     throw new CribbageException(message);
                 }
             }

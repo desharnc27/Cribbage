@@ -1,0 +1,39 @@
+
+* General
+
+handToAnal @ Enter the hand to analyse here.
+
+
+* CMD only
+
+orTypeCMD @ Or type a command
+typeInputGuide @ type "input-guide" for help about the input
+typeExit @ type "exit" to close the programm
+hereBasics @ Here are all basics commands:
+typeLang @ type "lang-xxx" to change language to some language xx. Example: lang-fra switches to french. 
+langUnknown @ Error: language $ is unknown or not supported
+
+* Graph only
+
+lang @ Language
+dataOpt @ Data
+useAdvStats @ Use advanced statistics
+consCrib @ Consider crib
+consPeg @ Consider peg
+othOpt @ Options
+file @ File
+inputGuide @ Input guide
+about @ About
+theme @ Theme
+dark @ Dark
+light @ Light
+
+* Exceptions
+
+errorHand @ Invalid Cribbage hand input: $
+errorNoInput @ No input entered
+errorLeftParam @ the leftmost paramter must be y or n, depending on if you have the crib or not
+errorNbCards @ the number of cards must be exactly 6
+errorUnknownCard @ $ is not a valid card
+errorDuplicate @ the hand you proposed has identical cards at indexes $ and $
+

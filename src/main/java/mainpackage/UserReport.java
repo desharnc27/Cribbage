@@ -76,9 +76,6 @@ public class UserReport {
             res[15-i-1] += DataForStrings.df(2, targetScore[i]);
 
         }
-        for (int i = 0; i < 15; i++) {
-            System.out.println("gagaga: "+i);
-        }
         return res;
     }
 }
