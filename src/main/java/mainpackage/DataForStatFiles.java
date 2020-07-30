@@ -22,7 +22,9 @@ import java.util.Date;
  */
 public class DataForStatFiles {
 
-    private static String REPORT_PATH="weightReports/";
+    private static final String fsl = System.getProperty("os.name").equals("Windows") ? "\\" : "/";
+
+    private static String REPORT_PATH="weightReports"+fsl;
 
     private static final float[][] cribWeightsSelf = new float[52][52];
     private static final float[][] cribWeightsOpp = new float[52][52];

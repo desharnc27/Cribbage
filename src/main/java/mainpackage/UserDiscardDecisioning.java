@@ -34,7 +34,7 @@ public class UserDiscardDecisioning {
      */
     
     public static void doPreOperations(){
-        
+        Langu.initialize();
         DataForStrings.proceed();
         DataForNumbers.proceed();
         DataForStatFiles.proceed();
@@ -74,16 +74,28 @@ public class UserDiscardDecisioning {
     public static void interactiveProgram(){
         Scanner scan = new Scanner(System.in);
         while (true) {
-            System.out.println("What hand do you want to analyse?");
+            System.out.print(Langu.smallText(0x1));
+            System.out.println("("+Langu.smallText(0x20)+")");
             String input = scan.next();
             if (input.equals("exit"))
                 break;
             if (input.equals("input-guide")){
-                printInputGuide();
+                //printInputGuide();
+                System.out.println(Langu.inputGuide());
                 continue;
             }
             if (input.equals("about")){
-                System.out.println(GeneralMeths.fileToString("about_pl.txt"));
+                //System.out.println(GeneralMeths.fileToString("about_pl.txt"));
+                System.out.println(Langu.about());
+                continue;
+            }
+            if (input.startsWith("lang-")){
+                //System.out.println(GeneralMeths.fileToString("about_pl.txt"));
+                String lang=input.substring(5);
+                boolean success=Langu.setLanguage(lang);
+                if (! success){
+                    System.out.println(Langu.smallTextX(0x25,new String[]{lang}));
+                }
                 continue;
             }
             try{
@@ -97,8 +109,10 @@ public class UserDiscardDecisioning {
                 System.out.println(s);
             }catch(CribbageException e){
                 System.out.println(e.getErrorMessage());
-                System.out.println("type \"input-guide\" for help about the input");
-                System.out.println("type \"exit\" to exit");
+                System.out.println(Langu.smallText(0x23));
+                System.out.println(Langu.smallText(0x21));
+                System.out.println(Langu.smallText(0x22));
+                System.out.println(Langu.smallText(0x24));
                 
             }
             

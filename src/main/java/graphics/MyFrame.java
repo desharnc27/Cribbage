@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import mainpackage.CribbageException;
 import mainpackage.GeneralMeths;
+import mainpackage.Langu;
 import mainpackage.SuitedMeths;
 import mainpackage.UserDiscardDecisioning;
 import mainpackage.UserReport;
@@ -73,7 +74,7 @@ public class MyFrame extends JFrame {
     private Color butBarColor;
     private JPanel seminorth;
 
-    String handEntryDefaultText = "Enter your hand here";
+    //String handEntryDefaultText = "Enter your hand here";
 
     //Sizes
     Font contentFont = new Font("monospaced", Font.BOLD, 20);
@@ -85,6 +86,11 @@ public class MyFrame extends JFrame {
 
     //private int heiButText=40;
     private JMenuItem aboutItem;
+    private JMenu othoMenu;
+    private JMenu langItm;
+    private JRadioButtonMenuItem[] langItems;
+    private ButtonGroup bgrLang;
+    private JMenu optMenu;
 
     public MyFrame() {
         setLayout(new BorderLayout());
@@ -92,7 +98,23 @@ public class MyFrame extends JFrame {
         setNorth();
         setContent();
         applyTheme();
-
+       
+        //TODO:Debug todele
+        JMenu shit00 = new JMenu("ark");
+        JMenu shit10 = new JMenu("bir");
+        JMenu shit11 = new JMenu("bot");
+        JMenuItem shit20 = new JMenuItem("cas");
+        JMenuItem shit21 = new JMenuItem("ced");
+        JMenuItem shit22 = new JMenuItem("cuy");
+        JMenuItem shit23 = new JMenuItem("cop");
+        
+        shit00.add(shit10);
+        shit00.add(shit11);
+        shit10.add(shit20);
+        shit10.add(shit21);
+        shit11.add(shit22);
+        shit11.add(shit23);
+        barMenu.add(shit00);
     }
 
     private void applyTheme() {
@@ -118,13 +140,82 @@ public class MyFrame extends JFrame {
         this.darkTheme = darkTheme;
 
     }
+    private void setOthoMenu() {
+        othoMenu = new JMenu(Langu.smallText(0x30));
+        barMenu.add(othoMenu);
+        
+        themeMenu = new JMenu(Langu.smallText(0x9));
+        darkChoice = new JRadioButtonMenuItem(Langu.smallText(0xa));
+        lightChoice = new JRadioButtonMenuItem(Langu.smallText(0xb));
 
+        bgrTh = new ButtonGroup();
+        bgrTh.add(darkChoice);
+        bgrTh.add(lightChoice);
+        themeMenu.add(darkChoice);
+        themeMenu.add(lightChoice);
+
+        ActionListener themeAL = (ActionEvent ae) -> {
+            if (ae.getSource() == darkChoice && !darkTheme) {
+                darkTheme = true;
+            } else if (ae.getSource() == lightChoice && darkTheme) {
+                darkTheme = false;
+            } else {
+                return;
+            }
+            applyTheme();
+            repaint();
+        };
+
+        darkChoice.addActionListener(themeAL);
+        lightChoice.addActionListener(themeAL);
+
+        //if (bgrTh.getSelection() == darkChoice);
+
+        
+        
+        langItm = new JMenu(Langu.smallText(0x31));
+        int nbLang=Langu.nbOfLang();
+        langItems=new JRadioButtonMenuItem [ nbLang];
+        bgrLang = new ButtonGroup();
+        
+        for (int i=0;i< nbLang;i++){
+            langItems[i]=new JRadioButtonMenuItem(Langu.getLang(i));
+            //langItm.add(langItems[i]);
+            bgrLang.add(langItems[i]);           
+        }
+        for (int i=0;i< nbLang;i++){
+            langItm.add(langItems[i]);
+            //bgrLang.add(langItems[i]);           
+        }
+        ActionListener langAL = (ActionEvent ae) -> {
+            int langSel=0;
+            while(langSel<nbLang && ae.getSource()!=langItems[langSel])
+                langSel++;
+            if (langSel==nbLang){
+                System.out.println("Warning: magical language selection");
+                return;
+            } 
+            Langu.setLanguage(langSel);
+            System.out.println(Langu.getLang());
+            repaint();
+        };
+        for (int i=0;i< nbLang;i++){
+            langItems[i].addActionListener(langAL);
+        }
+        
+        othoMenu.add(langItm);
+        othoMenu.add(themeMenu);
+        
+        
+        
+        
+    }
     private void setOptionsMenu() {
-        JMenu optMenu = new JMenu("Options");
+        optMenu = new JMenu(Langu.smallText(2));
 
-        JCheckBoxMenuItem useStatsItem = new JCheckBoxMenuItem("use advanced stats");
-        JCheckBoxMenuItem consCribItem = new JCheckBoxMenuItem("Consider crib");
-        JCheckBoxMenuItem consPegItem = new JCheckBoxMenuItem("Consider peg");
+        JCheckBoxMenuItem useStatsItem = new JCheckBoxMenuItem(Langu.smallText(3));
+        JCheckBoxMenuItem consCribItem = new JCheckBoxMenuItem(Langu.smallText(4));
+        JCheckBoxMenuItem consPegItem = new JCheckBoxMenuItem(Langu.smallText(5));
 
         consCribItem.setSelected(true);
         useStatsItem.setSelected(true);
@@ -177,8 +268,8 @@ public class MyFrame extends JFrame {
     private void setMenuBar() {
         barMenu = new JMenuBar();
 
-        fileMenu = new JMenu("File");
-        inputItem = new JMenuItem("input-guide");
+        fileMenu = new JMenu(Langu.smallText(6));
+        inputItem = new JMenuItem(Langu.smallText(7));
 
         fileMenu.add(inputItem);
         inputItem.addActionListener((ActionEvent e) -> {
@@ -188,7 +279,7 @@ public class MyFrame extends JFrame {
         });
         barMenu.add(fileMenu);
 
-        aboutItem = new JMenuItem("About");
+        aboutItem = new JMenuItem(Langu.smallText(8));
 
         fileMenu.add(aboutItem);
         aboutItem.addActionListener((ActionEvent e) -> {
@@ -222,34 +313,8 @@ public class MyFrame extends JFrame {
         naifData.addActionListener(dataAL);
         dankData.addActionListener(dataAL);
         barMenu.add(algoMenu);*/
-        themeMenu = new JMenu("Theme");
-        darkChoice = new JRadioButtonMenuItem("Dark");
-        lightChoice = new JRadioButtonMenuItem("Light");
-
-        bgrTh = new ButtonGroup();
-        bgrTh.add(darkChoice);
-        bgrTh.add(lightChoice);
-        themeMenu.add(darkChoice);
-        themeMenu.add(lightChoice);
-
-        ActionListener themeAL = (ActionEvent ae) -> {
-            if (ae.getSource() == darkChoice && !darkTheme) {
-                darkTheme = true;
-            } else if (ae.getSource() == lightChoice && darkTheme) {
-                darkTheme = false;
-            } else {
-                return;
-            }
-            applyTheme();
-            repaint();
-        };
-
-        darkChoice.addActionListener(themeAL);
-        lightChoice.addActionListener(themeAL);
-
-        if (bgrTh.getSelection() == darkChoice);
-
-        barMenu.add(themeMenu);
+        
+        setOthoMenu();
 
         setOptionsMenu();
         setJMenuBar(barMenu);
@@ -271,7 +336,7 @@ public class MyFrame extends JFrame {
         northTexts.add(handEntry, BorderLayout.NORTH);
 
         handEntry.setMinimumSize(new Dimension(2000, heiNorth0));
-        handEntry.setText(handEntryDefaultText);
+        handEntry.setText(Langu.smallText(1));
         handEntry.setEditable(true);
 
         handEntry.addActionListener((ActionEvent e) -> {
@@ -283,7 +348,7 @@ public class MyFrame extends JFrame {
     }
 
     private void setContent() {
-
+        //TODO upensmie
         content = new JTextArea("Initialized and ready \n ... and TWADOOOOO\n upensmie");
         content.setFont(contentFont);
         content.setLineWrap(true);
@@ -343,17 +408,22 @@ public class MyFrame extends JFrame {
         seminorth.add(decFontButton);
 
     }
-    private void display(String filename){
+    /*private void display(String filename){
         String text= GeneralMeths.fileToString(filename);
         //String text =StandardCharsets.readFile("test.txt", StandardCharsets.UTF_8);
         content.setText(text);
-        handEntry.setText(handEntryDefaultText);
+        handEntry.setText(Langu.smallText(1));
+        userReport = null;
+    }*/
+    private void displayAbout() {
+        //display("about_pl.txt");
+        content.setText(Langu.about());
+        handEntry.setText(Langu.smallText(1));
         userReport = null;
     }
-    private void displayAbout() {
-        display("about_pl.txt");
-    }
     private void displayInputGuide() {
-        display("inputUserGuide.txt");
+        content.setText(Langu.inputGuide());
+        handEntry.setText(Langu.smallText(1));
+        userReport = null;
     }
 }

@@ -22,7 +22,8 @@ public class CribbageException extends Exception {
         initError=bool;
     }
     public String getErrorMessage(){
-        return "Invalid cribbage hand input: "+ this.getMessage();
+        //return "Invalid cribbage hand input: "+ this.getMessage();
+        return Langu.smallTextX(0xe0, new String[]{this.getMessage()});
     }
     public boolean isInitError(){
         return initError;

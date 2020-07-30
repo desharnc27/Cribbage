@@ -1,7 +1,0 @@
-The input must have 7 strings seperated by commas, no space.
-The first string indicates who has the crib, the 6 others represent the 6 cards of your hand.
-The first string must be 'y' or 'n' (yes if you have the crib, no otherwise)
-For any string representing a card, the first character must be 's', 'c', 'd' or 'h', indicating if the suit of the card (spade, club, diamond, heart)
-For any string representing a card, the last character must be 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q' or 'K', indicating the number of the card.
-Examples of argument: "y,s5,d6,s3,dQ,h4,cK" or "n,d8,s8,c6,c7,d5,cT"
-
