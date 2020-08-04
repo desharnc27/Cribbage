@@ -7,8 +7,9 @@ package graphics;
  */
 
 import javax.swing.JFrame;
+import mainpackage.CentralSettings;
 import mainpackage.DataForStatFiles;
-import mainpackage.UserDiscardDecisioning;
+import cmdline.UserDiscardDecisioning;
 
 /**
  *
@@ -16,26 +17,11 @@ import mainpackage.UserDiscardDecisioning;
  */
 public class FrameMain {
     
-    private static boolean pegAvail=false;
-    //private static int topStatLevel;
-    private static boolean interfaceProg=false;
-    /*private static void setTopStatLevel(){
-        topStatLevel=DataForStatFiles.getLatestLevel();
-    }
-    public static int getTopStatLevel(){
-        return topStatLevel;
-    }*/
-    public static boolean pegAvailable(){
-        return pegAvail;
-    }
-    public static boolean onInterfaceProg(){
-        return  interfaceProg;
-    }
     
     
     
     public static void main(String[] args) {
-        UserDiscardDecisioning.doPreOperations();
+        CentralSettings.doPreOperations();
         DataForStatFiles.loadLatestStats();
         //interProg=true;
         MyFrame frame = new MyFrame();

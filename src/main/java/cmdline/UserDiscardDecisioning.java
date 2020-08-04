@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainpackage;
+package cmdline;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +13,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import graphics.FrameMain;
+import mainpackage.CentralSettings;
+import mainpackage.CribbageException;
+import mainpackage.GeneralMeths;
+import mainpackage.Langu;
+import mainpackage.SuitedMeths;
+import mainpackage.UserReport;
 
 
 
@@ -29,18 +36,12 @@ import graphics.FrameMain;
 public class UserDiscardDecisioning {
     
     /**
-     * The main
+     * The cmdline main
      * @param args arguments (hand for single request, nothing for interactive mode)
      */
     
-    public static void doPreOperations(){
-        Langu.initialize();
-        DataForStrings.proceed();
-        DataForNumbers.proceed();
-        DataForStatFiles.proceed();
-    }
     public static void main(String []args) {
-        doPreOperations();
+        CentralSettings.doPreOperations();
         if (args.length!=0){
             
             try {

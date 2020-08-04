@@ -5,6 +5,7 @@ package graphics;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,11 +28,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import mainpackage.CentralSettings;
 import mainpackage.CribbageException;
 import mainpackage.GeneralMeths;
 import mainpackage.Langu;
 import mainpackage.SuitedMeths;
-import mainpackage.UserDiscardDecisioning;
+import cmdline.UserDiscardDecisioning;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
 import mainpackage.UserReport;
 
 /**
@@ -40,8 +45,8 @@ import mainpackage.UserReport;
  */
 public class MyFrame extends JFrame {
 
-    boolean darkTheme = true;
-
+    private int themeId=0;
+    
     JMenuBar barMenu;
     JMenu fileMenu;
     JMenuItem inputItem;
@@ -55,8 +60,8 @@ public class MyFrame extends JFrame {
 
     JTextArea content = new JTextArea();
     private JMenu themeMenu;
-    private JRadioButtonMenuItem darkChoice;
-    private JRadioButtonMenuItem lightChoice;
+    //private JRadioButtonMenuItem darkChoice;
+    //private JRadioButtonMenuItem lightChoice;
     private ButtonGroup bgrTh;
 
     private String userCommand = "";
@@ -94,21 +99,40 @@ public class MyFrame extends JFrame {
     private JCheckBoxMenuItem useStatsItem;
     private JCheckBoxMenuItem consCribItem;
     private JCheckBoxMenuItem consPegItem;
+    private Theme [] themes;
+    private JRadioButtonMenuItem[] themeChoices;
 
     public MyFrame() {
         setLayout(new BorderLayout());
+        createThemes();
         setMenuBar();
         setNorth();
-        setContent();
+        setContent();       
         applyTheme();
+    }
+    private void createThemes(){
+        File file = new File("themes");
+        File[] files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return true;
+            }
+        });
+        themes=new Theme[files.length];
+        for (int i=0;i<themes.length;i++){
+            String txt=GeneralMeths.fileToString(files[i].getPath());
+            String [] arr=txt.split("\\n");
+            themes[i]=new Theme(arr,files[i].getName().replace(".txt", ""));
+
+        }
     }
 
     //To call after switching language
     private void setTags() {
         othoMenu.setText(Langu.smallText("othOpt"));
         themeMenu.setText(Langu.smallText("theme"));
-        darkChoice.setText(Langu.smallText("dark"));
-        lightChoice.setText(Langu.smallText("light"));
+        //darkChoice.setText(Langu.smallText("dark"));
+        //lightChoice.setText(Langu.smallText("light"));
         langItm.setText(Langu.smallText("lang"));
         optMenu.setText(Langu.smallText("dataOpt"));
         useStatsItem.setText(Langu.smallText("useAdvStats"));
@@ -121,7 +145,10 @@ public class MyFrame extends JFrame {
     }
 
     private void applyTheme() {
-        if (darkTheme) {
+        textColor = themes[themeId].txtContColor();
+        bckgColor =themes[themeId].bckgrContColor();
+        butBarColor = themes[themeId].zoomPanColor();
+        /*if (darkTheme) {
             textColor = Color.YELLOW;
             bckgColor = Color.BLACK;
             butBarColor = Color.MAGENTA;
@@ -129,7 +156,7 @@ public class MyFrame extends JFrame {
             bckgColor = Color.LIGHT_GRAY;
             textColor = Color.BLACK;
             butBarColor = Color.DARK_GRAY;
-        }
+        }*/
         handEntry.setBackground(bckgColor);
         content.setBackground(bckgColor);
         handEntry.setForeground(textColor);
@@ -139,8 +166,8 @@ public class MyFrame extends JFrame {
 
     }
 
-    public void setTheme(boolean darkTheme) {
-        this.darkTheme = darkTheme;
+    public void setTheme(int i) {
+        themeId = i;
 
     }
     private void setOthoMenu() {
@@ -148,29 +175,39 @@ public class MyFrame extends JFrame {
         barMenu.add(othoMenu);
         
         themeMenu = new JMenu(Langu.smallText("theme"));
-        darkChoice = new JRadioButtonMenuItem(Langu.smallText("dark"));
-        lightChoice = new JRadioButtonMenuItem(Langu.smallText("light"));
+        themeChoices=new JRadioButtonMenuItem[themes.length];
+        //darkChoice = new JRadioButtonMenuItem(Langu.smallText("dark"));
+        //lightChoice = new JRadioButtonMenuItem(Langu.smallText("light"));
 
         bgrTh = new ButtonGroup();
-        bgrTh.add(darkChoice);
-        bgrTh.add(lightChoice);
-        themeMenu.add(darkChoice);
-        themeMenu.add(lightChoice);
+        //bgrTh.add(darkChoice);
+        //bgrTh.add(lightChoice);
+        //themeMenu.add(darkChoice);
+        //themeMenu.add(lightChoice);
+        for (int i=0;i<themes.length;i++){
+            themeChoices[i]=new JRadioButtonMenuItem(themes[i].name());
+            bgrTh.add(themeChoices[i]);
+            themeMenu.add(themeChoices[i]);
+            //System.out.println(themeChoices[i].getText());
+            //System.out.println(themes[i].name());
+        }
 
         ActionListener themeAL = (ActionEvent ae) -> {
-            if (ae.getSource() == darkChoice && !darkTheme) {
-                darkTheme = true;
-            } else if (ae.getSource() == lightChoice && darkTheme) {
-                darkTheme = false;
-            } else {
-                return;
+            for (int i = 0; i < themes.length; i++) {
+                if (ae.getSource() == themeChoices[i] && i != themeId) {
+                    themeId = i;
+                    applyTheme();
+                    repaint();
+                    break;
+                }
             }
-            applyTheme();
-            repaint();
         };
+        for (int i=0;i<themes.length;i++){
+            themeChoices[i].addActionListener(themeAL);
+        }
 
-        darkChoice.addActionListener(themeAL);
-        lightChoice.addActionListener(themeAL);
+        //darkChoice.addActionListener(themeAL);
+        //lightChoice.addActionListener(themeAL);
 
         //if (bgrTh.getSelection() == darkChoice);
 
@@ -229,7 +266,7 @@ public class MyFrame extends JFrame {
         dataUse = useStatsItem.isSelected();
         considerPeg = consPegItem.isSelected();
 
-        if (FrameMain.pegAvailable() == false) {
+        if (CentralSettings.pegAvailable() == false) {
             consPegItem.setEnabled(false);
             //TODO: note in actual state display?
         }
@@ -344,8 +381,9 @@ public class MyFrame extends JFrame {
         handEntry.setEditable(true);
 
         handEntry.addActionListener((ActionEvent e) -> {
+           
             userCommand = handEntry.getText();
-
+            
             executeAlgo();
         });
 
@@ -370,6 +408,7 @@ public class MyFrame extends JFrame {
     }
 
     private void executeAlgo() {
+        
         content.setText("It should display the" + (dataUse ? "dankDat" : "naivDat") + " algo");
         String text;
         try {
