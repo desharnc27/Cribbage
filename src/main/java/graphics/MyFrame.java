@@ -37,6 +37,7 @@ import cmdline.UserDiscardDecisioning;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import mainpackage.UserReport;
 
 /**
@@ -44,7 +45,9 @@ import mainpackage.UserReport;
  * @author desharnc27
  */
 public class MyFrame extends JFrame {
-
+    
+    private MyTextFrame textFrame;
+    
     private int themeId=0;
     
     JMenuBar barMenu;
@@ -102,7 +105,9 @@ public class MyFrame extends JFrame {
     private Theme [] themes;
     private JRadioButtonMenuItem[] themeChoices;
 
-    public MyFrame() {
+    public MyFrame(String title) {
+        super(title);
+        textFrame=new MyTextFrame();
         setLayout(new BorderLayout());
         createThemes();
         setMenuBar();
@@ -112,12 +117,7 @@ public class MyFrame extends JFrame {
     }
     private void createThemes(){
         File file = new File("themes");
-        File[] files = file.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                return true;
-            }
-        });
+        File[] files = file.listFiles((File f) -> true);
         themes=new Theme[files.length];
         for (int i=0;i<themes.length;i++){
             String txt=GeneralMeths.fileToString(files[i].getPath());
@@ -391,7 +391,7 @@ public class MyFrame extends JFrame {
 
     private void setContent() {
         //TODO upensmie
-        content = new JTextArea("Initialized and ready \n ... and TWADOOOOO\n upensmie");
+        content = new JTextArea("Welcome bande de tarlas");
         content.setFont(contentFont);
         content.setLineWrap(true);
         content.setWrapStyleWord(true);
@@ -459,6 +459,7 @@ public class MyFrame extends JFrame {
     private void displaySome(){
         handEntry.setText(Langu.smallText("handToAnal"));
         userReport = null;
+        textFrame.showTime(content.getText());
     }
     private void displayAbout() {
         //display("about_pl.txt");
@@ -467,6 +468,7 @@ public class MyFrame extends JFrame {
         
     }
     private void displayInputGuide() {
+        JOptionPane.showMessageDialog(this, "Eggs are not supposed to be green.");
         content.setText(Langu.inputGuide());
         displaySome();
     }

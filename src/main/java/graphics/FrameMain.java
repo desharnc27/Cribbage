@@ -24,13 +24,17 @@ public class FrameMain {
         CentralSettings.doPreOperations();
         DataForStatFiles.loadLatestStats();
         //interProg=true;
-        MyFrame frame = new MyFrame();
-        frame.setResizable(true);
-        frame.setVisible(true);
-        frame.setSize(800, 800);
+        MyFrame mainFrame = new MyFrame("CribApp");
+        mainFrame.setResizable(true);
+        mainFrame.setVisible(true);
+        mainFrame.setSize(800, 800);
         System.out.println("TestGraphics run");
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JFrame textFrame=new JFrame();
+        
+        
+        
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         
     }
