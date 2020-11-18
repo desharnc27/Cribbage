@@ -23,7 +23,7 @@ import java.util.Arrays;
  */
 public class SuitedMeths {
     
-    static boolean debugEqualizer=false;
+    private static boolean debugEqualizer=false;
     
     public static void main(String args[]) throws CribbageException {
         DataForStrings.proceed();
@@ -439,8 +439,8 @@ public class SuitedMeths {
                     crib[3] = new Card(k); 
                     Card commo = new Card(i);
                     float score = PointCounting.countPoints(commo, crib, true);
-                    //if (debugEqualizer)
-                    //    coeff=1;
+                    if (debugEqualizer)
+                        coeff=1;
                     
                     sumScore += score*coeff;
                     sumCoeff += coeff;

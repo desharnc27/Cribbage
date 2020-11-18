@@ -3,10 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainpackage;
+package test;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mainpackage.CCHBunch;
+import mainpackage.CombMeths;
+import mainpackage.CribbageException;
+import mainpackage.DataForNumbers;
+import mainpackage.DataForStatFiles;
+import mainpackage.DataForStrings;
+import mainpackage.SuitedMeths;
+import mainpackage.UnsuitedMeths;
 
 
 

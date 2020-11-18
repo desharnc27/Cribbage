@@ -21,6 +21,12 @@ import java.util.Arrays;
  */
 public class PointCounting {
     
+    private static boolean debugPoints =false;
+    
+    private static boolean debugFu=false;
+    static float debugSeed;
+    private static float debugTresh=1f;//0.0002f;
+    
     /** Counts how much points are created by 15's combinations of a set of cards
      * @param cards the cards 
      * @return the points are created by pair 15's combinations 
@@ -161,15 +167,35 @@ public class PointCounting {
      * @return the total score of a combination
      */
     public static int countPoints(Card commo, Card[] hand,boolean isCrib) {
+        if (debugPoints)
+            return 42;
         Card[] mergeHand = merge(commo, hand);
-        int score= fifteenPoints(mergeHand);
-        score+= seriePoints(mergeHand);
-        score+= pairPoints(mergeHand);
-        score+= nobPoints(commo, hand);
-        score+= flushPoints(commo, hand,isCrib);
-        //System.out.println(commo+": "+score);
-        return score;
+        int fifScore = fifteenPoints(mergeHand);
+        int serieScore = seriePoints(mergeHand);
+        int pairScore = pairPoints(mergeHand);
+        int nobScore = nobPoints(commo, hand);
+        int flushScore = flushPoints(commo, hand, isCrib);
+        int total = fifScore + serieScore + pairScore + nobScore + flushScore;
+
+        if (isCrib && debugFu && Math.random() < debugTresh) {
+            System.out.println("------------");
+            System.out.println("Flip: " + commo);
+            System.out.print("Hand: ");
+            for (int i=0;i<hand.length;i++)
+                System.out.print(hand[i]+" ");
+            System.out.println("");
+            System.out.println("Fifteens:" + fifScore);
+            System.out.println("series:" + serieScore);
+            System.out.println("pairs: " + pairScore);
+            System.out.println("nob: " + nobScore);
+            System.out.println("flush: " + flushScore);
+            System.out.println("total: " + total);
+            System.out.println("------------");
+        }
+
+        return total;
     }
+
     /**
      * Put all the cards in one array
      * 

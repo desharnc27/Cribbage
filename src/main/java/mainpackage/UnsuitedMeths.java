@@ -6,6 +6,7 @@
 package mainpackage;
 
 
+import test.SmallTests;
 import java.util.ArrayList;
 import java.util.Arrays;
 

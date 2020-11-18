@@ -24,10 +24,11 @@ public class CentralSettings {
     public static boolean pegAvailable() {
         return pegAvail;
     }
+
     /*public static boolean onInterfaceProg(){
         return  interfaceProg;
     }*/
-        public static void doPreOperations(){
+    public static void doPreOperations() {
         Langu.initialize();
         DataForStrings.proceed();
         DataForNumbers.proceed();

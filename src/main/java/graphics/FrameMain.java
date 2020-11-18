@@ -9,7 +9,6 @@ package graphics;
 import javax.swing.JFrame;
 import mainpackage.CentralSettings;
 import mainpackage.DataForStatFiles;
-import cmdline.UserDiscardDecisioning;
 
 /**
  *
