@@ -15,8 +15,10 @@ import mainpackage.PointCounting;
  *
  * @author desha
  */
-public class Tests {
-
+public class PointsCategoryTests {
+    
+    //Add comments (also to TRAs)
+    
     private static int compteurNH = 0;
     //private static int compteurVal = 0;
 
@@ -176,15 +178,17 @@ public class Tests {
     public static void main1(){
         Card[] start =new Card[]{
             new Card(0,2),
-            new Card(0,2),
+            //new Card(0,2),
             //new Card(0,2),
         };
-        for (int i=1;i<13;i++){
+        for (int i=1;i<14;i++){
             start[0]=new Card(0,i);
-            start[1]=new Card(1,i+1);
+            //start[1]=new Card(1,i+1);
             //start[1]=new Card(2,i);
             computeAVG(start);
         }
+    }
+    public static void main2(){
     }
     
     public static void main(String [] args){

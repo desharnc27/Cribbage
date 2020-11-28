@@ -6,53 +6,50 @@
 package mainpackage;
 
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-
 /**
  *
  * Contains useful methods for cribbage discard decision making.
- * 
- * For a user, printDiscardReport is the relevant function to call to get
- * a discard choice.
- * 
+ *
+ * For a user, getDiscardReport is the relevant function to call to get a
+ * discard choice.
+ *
  * @author desharnc27
  */
 public class SuitedMeths {
-    
-    private static boolean debugEqualizer=false;
-    
+
+    private static final boolean DEBUG_EQUALIZER = false;
+
     public static void main(String args[]) throws CribbageException {
         DataForStrings.proceed();
-        printDiscardReport(args);
-    }
-    
-    public static UserReport printDiscardReport(String[] stArr) throws CribbageException {
-        return printDiscardReport(stArr,true);
+        //getDiscardReport(args);
     }
 
+    /*public static UserReport getDiscardReport(String[] stArr) throws CribbageException {
+        return getDiscardReport(stArr, (byte)1);
+    }*/
+
     /**
-     * Prints discard report, which contains the expected score of every choice of
-     * hand, plus or minus (depending on if player has crib or not) the expected
-     * score of the resulting crib.TODOtemp: now prints both 1 with stats use 2 without stat use
-     * 
+     * Returns a discard report, which contains the expected score of every choice
+     * of hand, plus or minus (depending on if player has crib or not) the
+     * expected score of the resulting crib.TODOtemp: now prints both 1 with
+     * stats use 2 without stat use
+     *
      *
      * @param stArr String array. atArr[0] must contain "yes" ("no") if the
      * player has (does not have) the crib. Other entries of stArr are the
      * strings representing each card of the initial 6-hand. Format of a card:
      * suit-number. Example : "yes sp-3 sp-6 di-8 cl-K cl-A cl-T"
+     * @param statUseType 0 for no stats (naive algo), 1 for cribstats, 2 for lissor stats
+     * @return discard report
      * @throws mainpackage.CribbageException
      *
      */
-    public static UserReport printDiscardReport(String[] stArr,boolean statUse) throws CribbageException {
-        if (stArr.length == 0 || stArr[0].length()<0) {
+    public static UserReport getDiscardReport(String[] stArr, byte statUseType) throws CribbageException {
+        if (stArr.length == 0 || stArr[0].length() < 0) {
             //the input is no defined
             //String message="no initiallization (no input)";
-            String message=Langu.smallText("errorNoInput");
-            throw new CribbageException(message,true);
+            String message = Langu.smallText("errorNoInput");
+            throw new CribbageException(message, true);
         }
         if (stArr.length == 1) {
             stArr = stArr[0].split(",");
@@ -61,89 +58,104 @@ public class SuitedMeths {
         boolean myCrib = false;
         if (cHasCrib == 'y') {
             myCrib = true;
-        }else if(cHasCrib != 'n'){
-            String message=Langu.smallText("errorLeftParam");
+        } else if (cHasCrib != 'n') {
+            String message = Langu.smallText("errorLeftParam");
             //String message="the leftmost paramter must be y or n, depending on if you have the crib";
             throw new CribbageException(message);
         }
         String[] stArrCards = new String[stArr.length - 1];
         System.arraycopy(stArr, 1, stArrCards, 0, stArrCards.length);
         int[] ids = DataForStrings.verboToIds(stArrCards);
-        
-        if (ids.length!=6){
+
+        if (ids.length != 6) {
             //String message="the number of cards must be exactly 6";
-            String message=Langu.smallText("errorNbCards");
+            String message = Langu.smallText("errorNbCards");
             throw new CribbageException(message);
         }
-        for(int i=0;i<ids.length;i++){
-            if (ids[i]==-1){
-                String message=Langu.smallTextX("errorUnknownCard",new String[]{stArrCards[i]});
+        for (int i = 0; i < ids.length; i++) {
+            if (ids[i] == -1) {
+                String message = Langu.smallTextX("errorUnknownCard", new String[]{stArrCards[i]});
                 throw new CribbageException(message);
             }
         }
-        for (int i=0;i<6;i++)
-            for (int j=1+i;j<6;j++){
-                if (ids[i]==ids[j]){
-                    String message=Langu.smallTextX("errorDuplicate",new int[]{i,j});;
+        for (int i = 0; i < 6; i++) {
+            for (int j = 1 + i; j < 6; j++) {
+                if (ids[i] == ids[j]) {
+                    String message = Langu.smallTextX("errorDuplicate", new int[]{i, j});
                     throw new CribbageException(message);
                 }
             }
-        
-        //debugEqualizer=false;
-        //printDiscardReport(myCrib, ids,true);
+        }
+
+        //DEBUG_EQUALIZER=false;
+        //getDiscardReport(myCrib, ids,true);
         //System.out.println("-------------");
         //System.out.println("-------------");
-        //debugEqualizer=true;
-        if (statUse){
+        //DEBUG_EQUALIZER=true;
+        /*if (statUseType!=0) {
             System.out.println("Analysis using discarding behavior statistics:");
-            return printDiscardReport(myCrib, ids,true);
-        }else{
+            return getDiscardReport(myCrib, ids,0);
+        } else {
             System.out.println("Analysis using no previous statistics:");
-            return printDiscardReport(myCrib, ids,false);
-        }
+            return getDiscardReport(myCrib, ids, );
+        }*/
         
-        
-        
-    }
-    /**
-     * Prints discard report, which contains the expected score of every choice of
-     * hand, plus or minus (depending on if player has crib or not) the expected
-     * score of the resulting crib.
-     *
-     * @param myCrib true if the player has the crib, false otherwise
-     * @param ids ids of the 6 initial cards
-     * @param useStats false if the user wants the program to assume that the opponent puts
-     * random cards (uniformly) in the crib, true if the program uses statistics 
-     * on the opponent's discarding behavior.
-     */
-    public static UserReport printDiscardReport(boolean myCrib, int[] ids,boolean useStats) {
-        if (!useStats){
-            return printDiscardReport(myCrib, ids, null);
-        }
-        //DataForStatFiles.loadLatestStats();
-        
-        float [][] cribCoeffs=DataForStatFiles.getCopyOfSuitedCribData(!myCrib);
-        return printDiscardReport(myCrib, ids, cribCoeffs);
+        return getDiscardReport(myCrib, ids,statUseType);
+
     }
 
     /**
-     * Prints discard report, which contains the expected score of every choice of
-     * hand, plus or minus (depending on if player has crib or not) the expected
-     * score of the resulting crib.
+     * Returns a discard report, which contains the expected score of every choice
+     * of hand, plus or minus (depending on if player has crib or not) the
+     * expected score of the resulting crib.
      *
      * @param myCrib true if the player has the crib, false otherwise
      * @param ids ids of the 6 initial cards
-     * @param cribCoeffs statistics on opponent's discarding behavior, null if unused
+     * @param statUseType 0 for no stats (naive algo), 1 for cribstats, 2 for lissor stats
+     * @return discard report
      */
-    public static UserReport printDiscardReport(boolean myCrib, int[] ids, float [][] cribCoeffs) {
+    public static UserReport getDiscardReport(boolean myCrib, int[] ids, byte statUseType) {
+        if (statUseType == 0) {
+            return getDiscardReport(myCrib, ids, null);
+        }
+        //DataForStatFiles.loadLatestStats();
+
+        float[][] cribCoeffs = null;
         
+        DataForStatFiles.getCopyOfSuitedCribData(!myCrib);
+        switch (statUseType) {
+            case 1:
+                cribCoeffs = DataForStatFiles.getCopyOfSuitedCribData(!myCrib);
+                break;
+            case 2:
+                cribCoeffs = DataForStatFiles.getCopyOfSuitedLissorCribData(!myCrib);
+                break;
+            default:
+                System.out.println("Wrong type of statUse");
+                break;
+        }
+        return getDiscardReport(myCrib, ids, cribCoeffs);
+    }
+
+    /**
+     * Returns a discard report, which contains the expected score of every choice
+     * of hand, plus or minus (depending on if player has crib or not) the
+     * expected score of the resulting crib.
+     *
+     * @param myCrib true if the player has the crib, false otherwise
+     * @param ids ids of the 6 initial cards
+     * @param cribCoeffs statistics on opponent's discarding behavior, null if
+     * unused
+     * @return the discard report
+     */
+    public static UserReport getDiscardReport(boolean myCrib, int[] ids, float[][] cribCoeffs) {
+
         //if (DataForStatFiles.containsSuitedCribData()){
-        
         //}
         //if (cribCoeffs!=null)
         //    clearCribStatsFromUnavails(cribCoeffs,ids);
-        Card chosenCards[] = new Card[4];
-        Card ridCards[] = new Card[2];
+        Card chosenCards[];// = new Card[4];
+        Card ridCards[];// = new Card[2];
 
         Card cards[] = new Card[6];
         for (int i = 0; i < 6; i++) {
@@ -153,7 +165,7 @@ public class SuitedMeths {
         String[] info = new String[15];
         //int[] permArr = GeneralMeths.idPermArray(15);
         //Double[] score = new Double[15];
-        
+
         Card[][] handMem = new Card[15][4];
         Card[][] cribMem = new Card[15][2];
         float[] cribEval = new float[15];
@@ -168,28 +180,28 @@ public class SuitedMeths {
                 int rejIdx = 0;
                 for (int k = 0; k < 6; k++) {
                     if (k == i || k == j) {
-                        cribMem[step][rejIdx++]=cards[k];
+                        cribMem[step][rejIdx++] = cards[k];
                         //ridCards[rejIdx++] = cards[k];
                     } else {
-                        handMem[step][choIdx++]= cards[k];
+                        handMem[step][choIdx++] = cards[k];
                         //chosenCards[choIdx++] = cards[k];
                     }
                 }
-                ridCards=cribMem[step];
-                chosenCards=handMem[step];
+                ridCards = cribMem[step];
+                chosenCards = handMem[step];
 
-                handEval[step] = (float)computeHandAverage(chosenCards, ridCards);
-                if (cribCoeffs==null){
+                handEval[step] = (float) computeHandAverage(chosenCards, ridCards);
+                if (cribCoeffs == null) {
                     //No prexisting stats will be used for calculations
-                    cribEval[step] = (float)computeCribAverage(ridCards, chosenCards);
+                    cribEval[step] = (float) computeCribAverage(ridCards, chosenCards);
                 } else {
                     //Prexisting crib stats in some files will be used for calculations
-                    cribEval[step] = (float)computeCribAverage(ridCards, chosenCards,cribCoeffs);
+                    cribEval[step] = (float) computeCribAverage(ridCards, chosenCards, cribCoeffs);
                 }
                 if (!myCrib) {
                     cribEval[step] *= -1;
                 }
-                pegEval[step]=UnsuitedMeths.computePegHeuri(chosenCards);
+                pegEval[step] = UnsuitedMeths.computePegHeuri(chosenCards);
                 //score[step] = handEval + cribEval;
                 //info[step] = DataForStrings.verboArr(chosenCards);
                 //info[step] += " " + DataForStrings.df(2, handEval);
@@ -200,12 +212,13 @@ public class SuitedMeths {
                 step++;
             }
         }
-        for (int i=0;i<15;i++){
-            if (cribEval[i]<0.000001)
+        for (int i = 0; i < 15; i++) {
+            if (cribEval[i] < 0.000001) {
                 System.out.println("Problem 0  in SuitedMeths");
+            }
         }
-        System.out.println("Before creating report: "+cribMem[0][0]);
-        return new UserReport(handMem,cribMem,handEval,cribEval,pegEval);
+        System.out.println("Before creating report: " + cribMem[0][0]);
+        return new UserReport(handMem, cribMem, handEval, cribEval, pegEval);
         /*GeneralMeths.quickSort(score, permArr);
 
         for (int i = 14; i >= 0; i--) {
@@ -286,7 +299,7 @@ public class SuitedMeths {
         } while (CombMeths.combIter(iter, 52));
         System.out.println(debugCount);
     }
-    */
+     */
     /**
      * Compute the average value of a 4-card hand
      *
@@ -334,12 +347,11 @@ public class SuitedMeths {
         }
         return alreadyContains(id, tab2);
     }*/
-
     /**
      * Compute the average value of a crib containing two specific cards.
      *
      * @param myCrib the two cards of the crib
-     * @param unavail cards that were already seen and can neither be the flip 
+     * @param unavail cards that were already seen and can neither be the flip
      * nor be the two other ones of the crib.
      * @return the average value of the crib. Note: the two other cards of the
      * crib and the flip are considered has uniformly random between remaining
@@ -387,20 +399,21 @@ public class SuitedMeths {
         }
         return sumScore / (double) nbPoss;
     }
+
     /**
      * Compute the average value of a crib containing two specific cards.
      *
      * @param myCrib the two cards of the crib
-     * @param unavail cards that were already seen and can neither be the flip 
+     * @param unavail cards that were already seen and can neither be the flip
      * nor be the two other ones of the crib.
-     * @param cribStats array containing statistics on what the other player my put in the crib
+     * @param cribStats array containing statistics on what the other player my
+     * put in the crib
      * @return the average value of the crib. Note: the two other cards of the
      * crib and the flip are considered has uniformly random between remaining
      * available cards.
      */
     public static double computeCribAverage(Card[] myCrib, Card[] unavail, float[][] cribStats) {
-        
-        
+
         boolean[] alreadyUsed = new boolean[52];
         for (Card c : myCrib) {
             alreadyUsed[c.getId()] = true;
@@ -408,9 +421,9 @@ public class SuitedMeths {
         for (Card c : unavail) {
             alreadyUsed[c.getId()] = true;
         }
-        
-        int nbFlipPoss=0;
-        float globalSumScore=0.0f;
+
+        int nbFlipPoss = 0;
+        float globalSumScore = 0.0f;
 
         for (int i = 0; i < 52; i++) {
             if (alreadyUsed[i]) {
@@ -418,9 +431,9 @@ public class SuitedMeths {
             }
             nbFlipPoss++;
             alreadyUsed[i] = true;
-            
+
             float sumScore = 0;
-            float sumCoeff=0;
+            float sumCoeff = 0;
 
             for (int j = 0; j < 52; j++) {
                 if (alreadyUsed[j]) {
@@ -430,30 +443,29 @@ public class SuitedMeths {
                     if (alreadyUsed[k]) {
                         continue;
                     }
-                    float coeff=cribStats[j][k];
-                    
+                    float coeff = cribStats[j][k];
+
                     Card[] crib = new Card[4];
                     crib[0] = myCrib[0];
                     crib[1] = myCrib[1];
                     crib[2] = new Card(j);
-                    crib[3] = new Card(k); 
+                    crib[3] = new Card(k);
                     Card commo = new Card(i);
                     float score = PointCounting.countPoints(commo, crib, true);
-                    if (debugEqualizer)
-                        coeff=1;
-                    
-                    sumScore += score*coeff;
+                    if (DEBUG_EQUALIZER) {
+                        coeff = 1;
+                    }
+
+                    sumScore += score * coeff;
                     sumCoeff += coeff;
 
                 }
             }
-            globalSumScore+=sumScore / sumCoeff;
+            globalSumScore += sumScore / sumCoeff;
             alreadyUsed[i] = false;
 
         }
-        return globalSumScore/nbFlipPoss;
+        return globalSumScore / nbFlipPoss;
     }
-
-    
 
 }

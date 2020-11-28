@@ -21,13 +21,13 @@ import java.util.Date;
  * @author desharnc27
  */
 public class DataForStatFiles {
-
-    private static final String fsl = System.getProperty("os.name").equals("Windows") ? "\\" : "/";
-
-    private static String REPORT_PATH="weightReports"+fsl;
+    private static String REPORT_PATH="weightReports"+File.separator;
 
     private static final float[][] cribWeightsSelf = new float[52][52];
     private static final float[][] cribWeightsOpp = new float[52][52];
+    
+    private static final float[][] cribWeightsLissorSelf = new float[52][52];
+    private static final float[][] cribWeightsLissorOpp = new float[52][52];
 
     //private static boolean ssFill=false;
     //private static boolean osFill=false;
@@ -77,13 +77,25 @@ public class DataForStatFiles {
             } else {
                 weights = UnsuitedMeths.analysisOfAll6Combos(null, false, i);
             }
-
+            
+            
+            float [][]suitedWeights = new float [52][52];
+            DataForStatFiles.transUnsuitedToSuited(weights, suitedWeights);
+            unitarize(suitedWeights,26*51);
             DataForStatFiles.writeCribUnsuitedFile(weights, false, i);
+            DataForStatFiles.writeCribFile(suitedWeights, false, i);
+            
+            //DataForStatFiles.writeCribUnsuitedFile(unsuitedScorePairs, myCrib, level);
+            //DataForStatFiles.writeCribSinglesFile(singleWeight, myCrib, level);
 
             DataForStatFiles.readUnsuitedCribOppFile(i);
             weights = UnsuitedMeths.analysisOfAll6Combos(cribWeightsOppUnsuited, true, i);
-            //weights=UnsuitedMeths.analysisOfAll6Combos(null,true,i);
+            
+            suitedWeights = new float [52][52];
+            DataForStatFiles.transUnsuitedToSuited(weights, suitedWeights);
+            unitarize(suitedWeights,26*51);
             DataForStatFiles.writeCribUnsuitedFile(weights, true, i);
+            DataForStatFiles.writeCribFile(suitedWeights, true, i);
         }
         editIterFile(stop);
     }
@@ -112,10 +124,50 @@ public class DataForStatFiles {
         }
 
     }
-    
-    
     /**
-     * Set???
+     * Translates a statistic 2D array formatted as unsuited.
+     * to a statistic 2D array formatted as suited.
+     * @param src
+     * @param dest 
+     */
+    public static void transUnsuitedToSuited(float[][]src, float[][] dest){
+        for (int i=0;i<52;i++){
+            for (int j=0;j<52;j++){
+                dest[i][j]=0;
+            }
+        }
+        for (int i=0;i<52;i++){
+            Card c0=new Card(i);
+            int n0=c0.getNum()-1;
+            int s0=c0.getSuit();
+            for (int j=i+1;j<52;j++){
+                
+                Card c1=new Card(j);              
+                int n1=c1.getNum()-1;
+                int s1=c1.getSuit();
+                
+                int coeff = 6;
+                float val = src[n0][n0];
+                if (n0 != n1) {
+                    if (s0 == s1) {
+                        coeff = 4;
+                    } else {
+                        coeff = 12;
+                    }
+                    if ((s0 != s1) == (n0 < n1)) {
+                        val = src[n0][n1];
+                    } else {
+                        val = src[n1][n0];
+                    }
+                }
+                dest[i][j]=val/coeff;
+
+            }
+        }
+        
+    }
+    /**
+     * Initialize static variables of this class. Usually called by CentralSettings.doPreOperations()
      */
     public static void proceed() {
         String projectPath;
@@ -153,6 +205,7 @@ public class DataForStatFiles {
         readCribOppFile(levMax);
         readUnsuitedCribSelfFile(levMax);
         readUnsuitedCribOppFile(levMax);
+        buildLissor();
     }
 
     /**
@@ -628,4 +681,201 @@ public class DataForStatFiles {
         return cribWeightsOppUnsuited;
         //return null;     
     }
+    /**
+     * Returns crib statistics modified by lissor algorithm
+     * @param selfCrib true if it's the statistics from the player who has the crib, false otherwise
+     * @return 2D array where the value at [i][j] is proportional to 
+     */
+    static float [][] getCopyOfSuitedLissorCribData(boolean selfCrib){
+        if (selfCrib) {
+            //if (suFill)
+            return cribWeightsLissorSelf;
+            //return null;
+        }
+        //if (ouFill)
+        return cribWeightsLissorOpp;
+        //return null;
+    }
+    /**
+     * Prints an analysis of convergence tests for both opp and self stat files
+     * @see convergenceTest(boolean)
+     */
+    public static void convergenceTest(){
+        convergenceTest(true);
+        convergenceTest(false);
+    }
+    /**
+     * Prints an analysis of the numerical differences between each stat file and its preceding file. 
+     * @param selfCrib true if self stats are analyzed, false if opp stats are analyzed
+     */
+    public static void convergenceTest(boolean selfCrib){
+        String s=selfCrib?"self":"opp";
+        System.out.println("Convergence test for "+s+" statistics");
+        
+        int levTop=getLatestLevel()+1;
+        float [][][] allStats=new float[levTop][52][52];
+        float [] convSum=new float[levTop-1];
+        for (int i=0;i<levTop;i++){
+            float [][]temp;
+            if (selfCrib){
+                temp=DataForStatFiles.readCribSelfFile(i);
+                
+            }else{
+                temp=DataForStatFiles.readCribOppFile(i);
+            }
+            for (int c0=0;c0<52;c0++)
+                System.arraycopy(temp[c0], c0+1, allStats[i][c0], c0+1, 52 - (c0+1));
+            if (i==0)
+                continue;
+            for (int c0=0;c0<52;c0++)
+                for (int c1=c0+1;c1<52;c1++){
+                    float v0 =allStats[i][c0][c1];
+                    float v1 = allStats[i - 1][c0][c1];
+                    v0 -= v1;
+                    if (v0 < 0) {
+                        convSum[i-1] -= v0;
+                    } else {
+                        convSum[i-1] += v0;
+                    }
+                }
+            convSum[i-1]/=(26*51);
+            System.out.println("From "+(i-1)+" to "+i+": "+convSum[i-1]);
+            
+        }
+        System.out.println("--------");
+    }
+    
+    /**
+     * Builds stat files, modified by lissor Algorithm. 
+     */
+    private static void buildLissor(){
+        transLissor(cribWeightsOppUnsuited,cribWeightsLissorOpp);
+        transLissor(cribWeightsSelfUnsuited,cribWeightsLissorSelf);
+    }
+    private static void transLissor(float [][] inStats, float[][] outStats){
+        double [] singleSumUp=new double [13];
+        double [] compareDiffSame =new double [3];
+        
+        for (int i=0;i<13;i++)
+            for (int j=0;j<13;j++){
+                
+                int tempIdx;
+                if (i<j){
+                    tempIdx=0;
+                }else if (i>j){
+                    tempIdx=1;
+                }else{
+                    tempIdx=2;
+                }
+                
+                double wei = inStats[i][j];
+                singleSumUp[i]+=wei;
+                singleSumUp[j]+=wei;
+                compareDiffSame[tempIdx]+=wei;
+                //compareDiffSame[tempIdx]+=wei;
+            }
+        
+        //adjust
+        
+        compareDiffSame[0]/=36;
+        compareDiffSame[1]/=12;
+        compareDiffSame[2]/=3;
+        
+        double dval= compareDiffSame[0];
+        double sval= compareDiffSame[1];
+        double commodiv= 51 *  singleSumUp[4];
+        for (int i=0;i<13;i++)
+            for (int j=0;j<13;j++){
+                double res=singleSumUp[i]*singleSumUp[j]/commodiv;
+                double adjust;              
+                if (i<j){
+                    //colorStrategy
+                    adjust= (4/(1+sval/dval))/3;
+                    
+                }else if (i>j){
+                    //colorStrategy
+                    adjust= 4/(1+dval/sval);
+                }else{
+                    //sameNumcoeff
+                    adjust=6.0/16;
+                }
+                res *= adjust;
+
+                for (int s0 = 0; s0 < 4; s0++) {
+                    for (int s1 = 0; s1 < 4; s1++) {
+                        if ((i > j) == (s0 != s1)) {
+                            continue;
+                        }
+                        if (i == j && s0 > s1) {
+                            continue;
+                        }
+                        int card0 = i + s0 * 13;
+                        int card1 = j + s1 * 13;
+                        if (card0 > card1) {
+                            int temp = card0;
+                            card0 = card1;
+                            card1 = temp;
+                        }
+                        outStats[card0][card1] = (float) res;
+                    }
+                }
+
+
+            }
+        
+    }
+    
+    
+    //TODO: Following method could be in a more general class. Is not in GeneralMeths because reason 313
+    /**
+     * Divides all values of array by the same divisor, in such a way that all values sum to 1. 
+     * @param weights 
+     */
+    public static void unitarize(float[][] arr, float targetSum) {
+        float sum= sum(arr);
+        float coeff=targetSum/sum;
+        for (int i=0;i<arr.length;i++){
+            for (int j=0;j<arr[i].length;j++)
+                arr[i][j]*=coeff;
+        }
+    }
+    /**
+     * Returns the sum of all values in  2D float array
+     * @param arr 2D float array
+     * @return the sum of all values in  2D float array
+     */
+    public static float sum(float[][] arr) {
+        float sum= 0;
+        for (float[] arr1 : arr) {
+            sum += sum(arr1);
+        }
+        return sum;
+    }
+    /**
+     * Returns the sum of all values in  float array
+     * @param arr float array
+     * @return the sum of all values in  float array
+     */
+    public static float sum(float[] arr) {
+        return sumX(arr,0,arr.length);
+    }
+    /**
+     * Sums values in a certain interval of an array. 
+     * 
+     * Note: it works by DivideAndConquer, to lower the risk of numerical imprecision amplification.
+     * @param arr float array
+     * @param low the lower index , included
+     * @param high the upper index, excluded
+     * @return sum of all the values at indexes between low and high
+     */
+    private static float sumX(float[] arr, int low, int high) {
+        if (low==high)
+            return 0;
+        if (low==high-1){
+            return arr[low];
+        }
+        int mid=(low+high)/2;
+        return sumX(arr,low,mid)+sumX(arr,mid,high);
+    }
+    
 }

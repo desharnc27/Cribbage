@@ -13,10 +13,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -33,10 +29,8 @@ import mainpackage.CribbageException;
 import mainpackage.GeneralMeths;
 import mainpackage.Langu;
 import mainpackage.SuitedMeths;
-import cmdline.UserDiscardDecisioning;
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
 import mainpackage.UserReport;
 
 /**
@@ -47,23 +41,22 @@ public class MyFrame extends JFrame {
 
     private int themeId=0;
     
-    JMenuBar barMenu;
-    JMenu fileMenu;
-    JMenuItem inputItem;
-    //JMenu algoMenu;
-    //JRadioButtonMenuItem naifData;
-    //JRadioButtonMenuItem dankData;
-    ButtonGroup bugr;
-    JPanel northTexts = new JPanel();
+    private JMenuBar barMenu;
+    private JMenu fileMenu;
+    private JMenuItem inputItem;
+    private ButtonGroup bugr;
+    private JPanel northTexts = new JPanel();
 
-    JTextField handEntry = new JTextField();
+    private JTextField handEntry = new JTextField();
 
-    JTextArea content = new JTextArea();
+    private JTextArea content = new JTextArea();
     private JMenu themeMenu;
     //private JRadioButtonMenuItem darkChoice;
     //private JRadioButtonMenuItem lightChoice;
     private ButtonGroup bgrTh;
 
+    
+    private final UserCommandStack inputStack=new UserCommandStack();
     private String userCommand = "";
     private UserReport userReport = null;
 
@@ -71,6 +64,8 @@ public class MyFrame extends JFrame {
     private boolean considerCrib = true;
     private boolean considerPeg = false;
 
+    private JButton precButton;
+    private JButton nextButton;
     private JButton incFontButton;
     private JButton decFontButton;
 
@@ -85,9 +80,9 @@ public class MyFrame extends JFrame {
     Font contentFont = new Font("monospaced", Font.BOLD, 20);
     Font buttonFont = new Font("monospaced", Font.BOLD, 5);
 
-    private int heiNorth0 = 60;
-    private int heiNorth1 = 60;
-    private int heiButt = 40;
+    private final int heiNorth0 = 60;
+    private final int heiNorth1 = 60;
+    private final int heiButt = 40;
 
     //private int heiButText=40;
     private JMenuItem aboutItem;
@@ -101,6 +96,10 @@ public class MyFrame extends JFrame {
     private JCheckBoxMenuItem consPegItem;
     private Theme [] themes;
     private JRadioButtonMenuItem[] themeChoices;
+    
+    //variables for hidden features
+    
+    private boolean statLissor =false;
 
     public MyFrame() {
         setLayout(new BorderLayout());
@@ -381,7 +380,9 @@ public class MyFrame extends JFrame {
         handEntry.setEditable(true);
 
         handEntry.addActionListener((ActionEvent e) -> {
-           
+            if (this.userReport!=null){
+                
+            }
             userCommand = handEntry.getText();
             
             executeAlgo();
@@ -412,27 +413,56 @@ public class MyFrame extends JFrame {
         content.setText("It should display the" + (dataUse ? "dankDat" : "naivDat") + " algo");
         String text;
         try {
-            userReport = SuitedMeths.printDiscardReport(new String[]{userCommand}, dataUse);
-            refreshContent();
+            boolean secretCommandFound = hiddenCommandProc();
+            if (secretCommandFound) {
+                text ="Hidden command performed: " + handEntry.getText();
+                content.setText(text);
+            } else {
+
+                byte dataUseType = 0;
+                if (dataUse) {
+                    dataUseType = statLissor ? (byte) 2 : (byte) 1;
+                }
+                userReport = SuitedMeths.getDiscardReport(new String[]{userCommand}, dataUseType);
+
+                refreshContent();
+            }
+            //No error so the command can be added to the stack
+            inputStack.add(userCommand);
+            
         } catch (CribbageException ex) {
+
             text = ex.getErrorMessage();
             content.setText(text);
+            
         }
 
     }
 
     private void setButtonBar() {
+        precButton = new JButton("<-");
+        nextButton = new JButton("->");
         incFontButton = new JButton("+");
         decFontButton = new JButton("-");
         //incFontButton.setFont(buttonFont);
         //decFontButton.setFont(buttonFont);
 
-        ActionListener fontSizeAL = (ActionEvent ae) -> {
+        ActionListener buttonsAL = (ActionEvent ae) -> {
             int newSize = contentFont.getSize();
             if (ae.getSource() == incFontButton) {
                 newSize++;
             } else if (ae.getSource() == decFontButton) {
                 newSize--;
+            } else if (ae.getSource() == precButton) {
+                if (inputStack.canPrec()) {
+                    handEntry.setText(this.inputStack.prec());
+                    handEntry.requestFocus();
+                }
+            } else if (ae.getSource() == nextButton) {
+                if (inputStack.canNext()) {
+                    handEntry.setText(this.inputStack.next());
+                    handEntry.requestFocus();
+                }
             }
             contentFont = new Font("monospaced", Font.BOLD, newSize);
             content.setFont(contentFont);
@@ -440,13 +470,19 @@ public class MyFrame extends JFrame {
         };
         incFontButton.setPreferredSize(new Dimension(50, heiButt));
         decFontButton.setPreferredSize(new Dimension(50, heiButt));
-        incFontButton.addActionListener(fontSizeAL);
-        decFontButton.addActionListener(fontSizeAL);
+        precButton.setPreferredSize(new Dimension(50, heiButt));
+        nextButton.setPreferredSize(new Dimension(50, heiButt));
+        incFontButton.addActionListener(buttonsAL);
+        decFontButton.addActionListener(buttonsAL);
+        precButton.addActionListener(buttonsAL);
+        nextButton.addActionListener(buttonsAL);
         seminorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
         seminorth.setPreferredSize(new Dimension(200, heiNorth1));
         northTexts.add(seminorth, BorderLayout.CENTER);
         seminorth.add(incFontButton);
         seminorth.add(decFontButton);
+        seminorth.add(precButton);
+        seminorth.add(nextButton);
 
     }
     /*private void display(String filename){
@@ -469,5 +505,16 @@ public class MyFrame extends JFrame {
     private void displayInputGuide() {
         content.setText(Langu.inputGuide());
         displaySome();
+    }
+    private boolean hiddenCommandProc(){
+        switch (handEntry.getText()) {
+            case "lissor on" -> statLissor=true;
+            case "lissor off" -> statLissor=false;
+            default -> {
+                return false;
+            }
+        }
+        return true;
+        
     }
 }

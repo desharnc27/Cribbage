@@ -8,6 +8,7 @@ package test;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mainpackage.CCHBunch;
+import mainpackage.CentralSettings;
 import mainpackage.CombMeths;
 import mainpackage.CribbageException;
 import mainpackage.DataForNumbers;
@@ -77,7 +78,7 @@ public class SmallTests {
         
         String []args = new String[]{"y di2 cl-2 d3 c4 c8 c1"};
         try {
-            SuitedMeths.printDiscardReport(args);
+            SuitedMeths.getDiscardReport(args,(byte)1);
         } catch (CribbageException ex) {
         }
     }
@@ -100,12 +101,27 @@ public class SmallTests {
        DataForStatFiles.createValueFiles();
        
     }
+    
+    public static void mainA() {
+       float [][] arr =new float [][]{
+               {1f,2f,3f},
+               {2f,3f,4f},
+               {3f,4f,5f}
+               
+               };
+       System.out.println(DataForStatFiles.sum(arr));
+       DataForStatFiles.unitarize(arr,9);
+       System.out.println(DataForStatFiles.sum(arr));
+       System.out.println(arr[0][0]);
+       System.out.println(arr[0][1]);
+       System.out.println(arr[0][2]);
+       
+    }
 
     public static void main(String[] args) {
-        DataForNumbers.proceed();
-        DataForStrings.proceed();
+        CentralSettings.doPreOperations();
         try {
-            main6();
+            mainA();
         } catch (Exception e) {
             System.out.println(e.getClass());
             System.out.println(e.getMessage());

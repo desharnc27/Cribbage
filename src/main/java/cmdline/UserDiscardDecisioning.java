@@ -6,13 +6,7 @@
 package cmdline;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
-import graphics.FrameMain;
 import mainpackage.CentralSettings;
 import mainpackage.CribbageException;
 import mainpackage.GeneralMeths;
@@ -42,21 +36,12 @@ public class UserDiscardDecisioning {
     
     public static void main(String []args) {
         CentralSettings.doPreOperations();
-        if (args.length!=0){
-            
-            try {
-                SuitedMeths.printDiscardReport(args);
-            } catch (CribbageException ex) {
-                System.out.println(ex.getErrorMessage());
-                printInputGuide();
-            }
-            return;
-        }
         interactiveProgram();        
         
     }
     /**
-     * Prints the input guide
+     * Extracts the input guide from folders
+     * @return the input guide
      */
     public static String getInputGuide() {
         String text = GeneralMeths.fileToString("inputUserGuide.txt");
@@ -102,10 +87,10 @@ public class UserDiscardDecisioning {
             try{
                 
                 String [] param=input.split(",");
-                UserReport ur=SuitedMeths.printDiscardReport(param);
+                UserReport ur=SuitedMeths.getDiscardReport(param,(byte)1);
                 String s=String.join("\n",ur.computeStringArr(true, false));
                 System.out.println(s);
-                ur=SuitedMeths.printDiscardReport(param,false);
+                ur=SuitedMeths.getDiscardReport(param,(byte)0);
                 s=String.join("\n",ur.computeStringArr(true, false));
                 System.out.println(s);
             }catch(CribbageException e){

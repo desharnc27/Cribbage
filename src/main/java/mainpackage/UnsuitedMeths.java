@@ -383,7 +383,6 @@ public class UnsuitedMeths {
                         float v0 = cribstats[j - 1][k - 1];
                         float v1 = cribstats[k - 1][j - 1];
                         if (allDiff(crib, i)) {
-                            //TODO:continue here
                             sumScore += 5 / 16.0f * probOfCrib2SameSuit * v1 * secondCoeff;
                         }
                         sumScore += DataForNumbers.getScore5WithoutFlush(idx5) * secondCoeff * (v0 + v1);
@@ -637,8 +636,10 @@ public class UnsuitedMeths {
                 singleWeight[j]+=unsuitedScorePairs[i][j];
             }
         
-        DataForStatFiles.writeCribFile(arrOfScorePairs, myCrib, level);
-        DataForStatFiles.writeCribUnsuitedFile(unsuitedScorePairs, myCrib, level);
+        //DataForStatFiles.writeCribFile(arrOfScorePairs, myCrib, level);
+        //DataForStatFiles.writeCribUnsuitedFile(unsuitedScorePairs, myCrib, level);
+        
+        //TODO: louche to call write meths out of DataForStatFiles
         DataForStatFiles.writeCribSinglesFile(singleWeight, myCrib, level);
         System.out.println("Terminated for: " + myCrib + "," + level);
         return unsuitedScorePairs;
