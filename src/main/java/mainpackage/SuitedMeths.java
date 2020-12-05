@@ -63,15 +63,18 @@ public class SuitedMeths {
             //String message="the leftmost paramter must be y or n, depending on if you have the crib";
             throw new CribbageException(message);
         }
-        String[] stArrCards = new String[stArr.length - 1];
-        System.arraycopy(stArr, 1, stArrCards, 0, stArrCards.length);
-        int[] ids = DataForStrings.verboToIds(stArrCards);
-
-        if (ids.length != 6) {
+        if (stArr.length != 7) {
             //String message="the number of cards must be exactly 6";
             String message = Langu.smallText("errorNbCards");
             throw new CribbageException(message);
         }
+        String[] stArrCards = new String[stArr.length - 1];
+        System.arraycopy(stArr, 1, stArrCards, 0, stArrCards.length);
+        manageSlangInput(stArrCards);
+        
+        int[] ids = DataForStrings.verboToIds(stArrCards);
+
+        
         for (int i = 0; i < ids.length; i++) {
             if (ids[i] == -1) {
                 String message = Langu.smallTextX("errorUnknownCard", new String[]{stArrCards[i]});
@@ -466,6 +469,33 @@ public class SuitedMeths {
 
         }
         return globalSumScore / nbFlipPoss;
+    }
+    /**
+     * If the user omits suits in input (laziness), it is considered as a slang input.
+     * So this function transforms slang input into full input by adding balanced suits to the cards.
+     * @param splitInput array containing split parts of user input.
+     */
+    public static void manageSlangInput(String [] splitInput){
+        try {
+            
+            //If a member of splitInput has more than a character, its not pure slang
+            //So it won't be treated as slang
+            for (String s:splitInput)
+                if (s.length()!=1)
+                    return;
+            int [] vals =new int [splitInput.length];
+            
+            for (int i=0;i<splitInput.length;i++){
+                vals[i] =DataForStrings.numEncode( splitInput[i].charAt(0));               
+            }
+            GeneralMeths.quickSort(vals);
+            for (int i=0;i<splitInput.length;i++){
+                String suit = DataForStrings.strOfSuit(i%4);
+                splitInput[i]=suit+DataForStrings.symbolOfNum(vals[i]);
+            }
+        } catch (Exception e) {
+        }
+
     }
 
 }

@@ -25,7 +25,7 @@ public class DataForStrings {
     /**
      * String representation of all card suits
      */
-    static String [] strSuit;
+    private static String [] strSuit;
     
     /**
      * Method to execute to fill the static arrays, must be run at the beginning of any main.
@@ -168,6 +168,16 @@ public class DataForStrings {
      */
     public static String symbolOfNum(int i) {
         return strNum[i];
+    }
+    /**
+     * Converts a number into a card symbol
+     * @param i a number
+     * @return its card symbol representation, as a char
+     * 
+     * Ex: symbolOfNum(4) return '4' and symbolOfNum(12) returns 'Q';
+     */
+    public static String strOfSuit(int i) {
+        return strSuit[i];
     }
 
     /**
