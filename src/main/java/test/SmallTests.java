@@ -121,7 +121,7 @@ public class SmallTests {
     public static void main(String[] args) {
         CentralSettings.doPreOperations();
         try {
-            mainA();
+            //mainA();
         } catch (Exception e) {
             System.out.println(e.getClass());
             System.out.println(e.getMessage());

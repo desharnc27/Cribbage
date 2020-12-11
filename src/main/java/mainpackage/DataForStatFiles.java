@@ -49,6 +49,22 @@ public class DataForStatFiles {
     static boolean trollWriter = false;
 
     private static String reportInfo = REPORT_PATH + "reportInfo";
+    private static final String rootName ="CribbageNWT";
+    private static String rootPath;
+    
+    private static void  setRoot(){
+        String current = System.getProperty("user.dir");
+        int idx = current.indexOf(rootName);
+        if (idx<0){
+            System.out.println("Major problem: wrong root name");
+            return;
+        }
+        rootPath= current.substring(0, idx+rootName.length());
+        System.out.println("root path: "+rootPath+"\\");
+        
+    }
+    
+    
 
     /**
      * Fills all the statistic files up to stop exclusively.
@@ -170,6 +186,7 @@ public class DataForStatFiles {
      * Initialize static variables of this class. Usually called by CentralSettings.doPreOperations()
      */
     public static void proceed() {
+        setRoot();
         String projectPath;
         String differ = "/src/main/java/mainpackage";
         projectPath = System.getProperty("user.dir");
