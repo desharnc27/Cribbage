@@ -1,40 +1,42 @@
 
 * General
 
-handToAnal @ Entrez la main Ã  analyser ici.
+handToAnal @ Entrez la main à analyser ici.
 
 
 * CMD only
 
 orTypeCMD @ Ou tapez une commande
-typeInputGuide @ tapez "input-guide" pour obtenir de l'information sur les arguments Ã  fournir en entrÃ©e.
-typeAbout @ type "about" to know more about this programm.
-typeExit @ type "exit" pour fermer le programme
+typeInputGuide @ tapez "input-guide" pour obtenir de l'information sur les arguments à fournir en entrée.
+typeAbout @ tapez "about" pour en apprendre d'avantage sur l'application.
+typeExit @ tapez "exit" pour fermer l'application.
 hereBasics @ Voici les commandes de bases:
-typeLang @ tapez "lang-xxx" pour passer Ã  un langage xxx. Exemple: lang-fra met le programme en franÃ§ais. 
-langUnknown @ Error: langage $ inconnu ou non supportÃ©.
+typeLang @ tapez "lang-xxx" pour passer à un langage xxx. Exemple: lang-fra met le programme en français. 
+langUnknown @ Error: langage $ inconnu ou non supporté.
+NaiveResults @ Performances moyennes, en assumant que l'adversiare discarte de manière aléatoire
+AdvancedResults @ Performances moyennes, en assumant que l'adversiare discarte de manière intelligente
 
 * Graph only
 
 lang @ Langue
-dataOpt @ DonnÃ©es
-useAdvStats @ Utiliser les statistiques avancÃ©es.
-consCrib @ ConsidÃ©rer le crib
-consPeg @ ConsidÃ©rer le peg
+dataOpt @ Données
+useAdvStats @ Utiliser les statistiques avancées.
+consCrib @ Considérer le crib
+consPeg @ Considérer le peg
 othOpt @ Options
 file @ Fichier
-inputGuide @ Guide d'entrÃ©e
-about @ Ã€ propos
-theme @ ThÃ¨me
+inputGuide @ Guide d'entrée
+about @ À propos
+theme @ Thème
 dark @ Sombre
 light @ Clair
 
 * Cribbage Exceptions
 
 errorHand @ Main invalide: $
-errorNoInput @ Aucun paramÃ¨tre/entrÃ©e fourni
-errorLeftParam @ le premier paramÃ¨tre doit Ãªtre y or n, indiquant si l'usager a le crib ou pas.
-errorNbCards @ Le nombre de cartes doit Ãªtre 6.
+errorNoInput @ Aucun paramètre/entrée fourni
+errorLeftParam @ le premier paramètre doit être y or n, indiquant si l'usager a le crib ou pas.
+errorNbCards @ Le nombre de cartes doit être 6.
 errorUnknownCard @ $ n'est pas une carte valide.
-errorDuplicate @ la main proposÃ©e possÃ¨de la mÃªme carte aux positions $ et $
+errorDuplicate @ la main proposée possède la même carte aux positions $ et $
 

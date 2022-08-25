@@ -8,10 +8,13 @@ handToAnal @ Enter the hand to analyse here.
 
 orTypeCMD @ Or type a command
 typeInputGuide @ type "input-guide" for help about the input
+typeAbout @ type "about" to know more about this programm.
 typeExit @ type "exit" to close the programm
 hereBasics @ Here are all basics commands:
 typeLang @ type "lang-xxx" to change language to some language xx. Example: lang-fra switches to french. 
 langUnknown @ Error: language $ is unknown or not supported
+NaiveResults @ Average performances, assuming random discarding by the opponent
+AdvancedResults @ Average performances, assuming wise discarding by the opponent
 
 * Graph only
 

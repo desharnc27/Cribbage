@@ -1,11 +1,5 @@
 package graphics;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,14 +18,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import mainpackage.CentralSettings;
-import mainpackage.CribbageException;
-import mainpackage.GeneralMeths;
-import mainpackage.Langu;
-import mainpackage.SuitedMeths;
+import core.CentralSettings;
+import core.CribbageException;
+import tools.GeneralMeths;
+import core.Langu;
+import core.SuitedMeths;
 import java.io.File;
 import java.io.FileFilter;
-import mainpackage.UserReport;
+import core.UserReport;
+import tools.RootFinder;
 
 /**
  *
@@ -39,8 +34,8 @@ import mainpackage.UserReport;
  */
 public class MyFrame extends JFrame {
 
-    private int themeId=0;
-    
+    private int themeId = 0;
+
     private JMenuBar barMenu;
     private JMenu fileMenu;
     private JMenuItem inputItem;
@@ -55,8 +50,7 @@ public class MyFrame extends JFrame {
     //private JRadioButtonMenuItem lightChoice;
     private ButtonGroup bgrTh;
 
-    
-    private final UserCommandStack inputStack=new UserCommandStack();
+    private final UserCommandStack inputStack = new UserCommandStack();
     private String userCommand = "";
     private UserReport userReport = null;
 
@@ -75,7 +69,6 @@ public class MyFrame extends JFrame {
     private JPanel seminorth;
 
     //String handEntryDefaultText = "Enter your hand here";
-
     //Sizes
     Font contentFont = new Font("monospaced", Font.BOLD, 20);
     Font buttonFont = new Font("monospaced", Font.BOLD, 5);
@@ -94,34 +87,34 @@ public class MyFrame extends JFrame {
     private JCheckBoxMenuItem useStatsItem;
     private JCheckBoxMenuItem consCribItem;
     private JCheckBoxMenuItem consPegItem;
-    private Theme [] themes;
+    private Theme[] themes;
     private JRadioButtonMenuItem[] themeChoices;
-    
+
     //variables for hidden features
-    
-    private boolean statLissor =false;
+    private boolean statLissor = false;
 
     public MyFrame() {
         setLayout(new BorderLayout());
         createThemes();
         setMenuBar();
         setNorth();
-        setContent();       
+        setContent();
         applyTheme();
     }
-    private void createThemes(){
-        File file = new File("themes");
+
+    private void createThemes() {
+        File file = new File(RootFinder.getRootPath() + "themes");
         File[] files = file.listFiles(new FileFilter() {
             @Override
             public boolean accept(File f) {
                 return true;
             }
         });
-        themes=new Theme[files.length];
-        for (int i=0;i<themes.length;i++){
-            String txt=GeneralMeths.fileToString(files[i].getPath());
-            String [] arr=txt.split("\\n");
-            themes[i]=new Theme(arr,files[i].getName().replace(".txt", ""));
+        themes = new Theme[files.length];
+        for (int i = 0; i < themes.length; i++) {
+            String txt = GeneralMeths.fileToString(files[i].getPath());
+            String[] arr = txt.split("\\n");
+            themes[i] = new Theme(arr, files[i].getName().replace(".txt", ""));
 
         }
     }
@@ -145,7 +138,7 @@ public class MyFrame extends JFrame {
 
     private void applyTheme() {
         textColor = themes[themeId].txtContColor();
-        bckgColor =themes[themeId].bckgrContColor();
+        bckgColor = themes[themeId].bckgrContColor();
         butBarColor = themes[themeId].zoomPanColor();
         /*if (darkTheme) {
             textColor = Color.YELLOW;
@@ -169,12 +162,13 @@ public class MyFrame extends JFrame {
         themeId = i;
 
     }
+
     private void setOthoMenu() {
         othoMenu = new JMenu(Langu.smallText("othOpt"));
         barMenu.add(othoMenu);
-        
+
         themeMenu = new JMenu(Langu.smallText("theme"));
-        themeChoices=new JRadioButtonMenuItem[themes.length];
+        themeChoices = new JRadioButtonMenuItem[themes.length];
         //darkChoice = new JRadioButtonMenuItem(Langu.smallText("dark"));
         //lightChoice = new JRadioButtonMenuItem(Langu.smallText("light"));
 
@@ -183,8 +177,8 @@ public class MyFrame extends JFrame {
         //bgrTh.add(lightChoice);
         //themeMenu.add(darkChoice);
         //themeMenu.add(lightChoice);
-        for (int i=0;i<themes.length;i++){
-            themeChoices[i]=new JRadioButtonMenuItem(themes[i].name());
+        for (int i = 0; i < themes.length; i++) {
+            themeChoices[i] = new JRadioButtonMenuItem(themes[i].name());
             bgrTh.add(themeChoices[i]);
             themeMenu.add(themeChoices[i]);
             //System.out.println(themeChoices[i].getText());
@@ -201,55 +195,50 @@ public class MyFrame extends JFrame {
                 }
             }
         };
-        for (int i=0;i<themes.length;i++){
+        for (int i = 0; i < themes.length; i++) {
             themeChoices[i].addActionListener(themeAL);
         }
 
         //darkChoice.addActionListener(themeAL);
         //lightChoice.addActionListener(themeAL);
-
         //if (bgrTh.getSelection() == darkChoice);
-
-        
-        
         langItm = new JMenu(Langu.smallText("lang"));
-        int nbLang=Langu.nbOfLang();
-        langItems=new JRadioButtonMenuItem [ nbLang];
+        int nbLang = Langu.nbOfLang();
+        langItems = new JRadioButtonMenuItem[nbLang];
         bgrLang = new ButtonGroup();
-        
-        for (int i=0;i< nbLang;i++){
-            langItems[i]=new JRadioButtonMenuItem(Langu.getLang(i));
+
+        for (int i = 0; i < nbLang; i++) {
+            langItems[i] = new JRadioButtonMenuItem(Langu.getLang(i));
             //langItm.add(langItems[i]);
-            bgrLang.add(langItems[i]);           
+            bgrLang.add(langItems[i]);
         }
-        for (int i=0;i< nbLang;i++){
+        for (int i = 0; i < nbLang; i++) {
             langItm.add(langItems[i]);
             //bgrLang.add(langItems[i]);           
         }
         ActionListener langAL = (ActionEvent ae) -> {
-            int langSel=0;
-            while(langSel<nbLang && ae.getSource()!=langItems[langSel])
+            int langSel = 0;
+            while (langSel < nbLang && ae.getSource() != langItems[langSel]) {
                 langSel++;
-            if (langSel==nbLang){
+            }
+            if (langSel == nbLang) {
                 System.out.println("Warning: magical language selection");
                 return;
-            } 
+            }
             Langu.setLanguage(langSel);
             setTags();
             System.out.println(Langu.getLang());
             repaint();
         };
-        for (int i=0;i< nbLang;i++){
+        for (int i = 0; i < nbLang; i++) {
             langItems[i].addActionListener(langAL);
         }
-        
+
         othoMenu.add(langItm);
         othoMenu.add(themeMenu);
-        
-        
-        
-        
+
     }
+
     private void setOptionsMenu() {
         optMenu = new JMenu(Langu.smallText("dataOpt"));
 
@@ -353,7 +342,6 @@ public class MyFrame extends JFrame {
         naifData.addActionListener(dataAL);
         dankData.addActionListener(dataAL);
         barMenu.add(algoMenu);*/
-        
         setOthoMenu();
 
         setOptionsMenu();
@@ -380,11 +368,11 @@ public class MyFrame extends JFrame {
         handEntry.setEditable(true);
 
         handEntry.addActionListener((ActionEvent e) -> {
-            if (this.userReport!=null){
-                
+            if (this.userReport != null) {
+
             }
             userCommand = handEntry.getText();
-            
+
             executeAlgo();
         });
 
@@ -392,7 +380,7 @@ public class MyFrame extends JFrame {
 
     private void setContent() {
         //TODO upensmie
-        content = new JTextArea("Initialized and ready \n ... and TWADOOOOO\n upensmie");
+        content = new JTextArea("Welcome to CribbageSolver");
         content.setFont(contentFont);
         content.setLineWrap(true);
         content.setWrapStyleWord(true);
@@ -409,13 +397,13 @@ public class MyFrame extends JFrame {
     }
 
     private void executeAlgo() {
-        
+
         content.setText("It should display the" + (dataUse ? "dankDat" : "naivDat") + " algo");
         String text;
         try {
             boolean secretCommandFound = hiddenCommandProc();
             if (secretCommandFound) {
-                text ="Hidden command performed: " + handEntry.getText();
+                text = "Hidden command performed: " + handEntry.getText();
                 content.setText(text);
             } else {
 
@@ -429,12 +417,12 @@ public class MyFrame extends JFrame {
             }
             //No error so the command can be added to the stack
             inputStack.add(userCommand);
-            
+
         } catch (CribbageException ex) {
 
             text = ex.getErrorMessage();
             content.setText(text);
-            
+
         }
 
     }
@@ -485,6 +473,7 @@ public class MyFrame extends JFrame {
         seminorth.add(nextButton);
 
     }
+
     /*private void display(String filename){
         String text= GeneralMeths.fileToString(filename);
         //String text =StandardCharsets.readFile("test.txt", StandardCharsets.UTF_8);
@@ -492,29 +481,34 @@ public class MyFrame extends JFrame {
         handEntry.setText(Langu.smallText(1));
         userReport = null;
     }*/
-    private void displaySome(){
+    private void displaySome() {
         handEntry.setText(Langu.smallText("handToAnal"));
         userReport = null;
     }
+
     private void displayAbout() {
         //display("about_pl.txt");
         content.setText(Langu.about());
         displaySome();
-        
+
     }
+
     private void displayInputGuide() {
         content.setText(Langu.inputGuide());
         displaySome();
     }
-    private boolean hiddenCommandProc(){
+
+    private boolean hiddenCommandProc() {
         switch (handEntry.getText()) {
-            case "lissor on" -> statLissor=true;
-            case "lissor off" -> statLissor=false;
+            case "lissor on" ->
+                statLissor = true;
+            case "lissor off" ->
+                statLissor = false;
             default -> {
                 return false;
             }
         }
         return true;
-        
+
     }
 }
