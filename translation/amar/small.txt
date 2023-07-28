@@ -34,6 +34,7 @@ light @ Clair
 errorHand @ Main invalide: $
 errorNoInput @ Aucun paramètre/entrée fourni
 errorLeftParam @ le premier paramètre doit être y or n, indiquant si l'usager a le crib ou pas.
+errorEmptyParam @ Il ne doit pas y avoir de paramètre vide (virgule en commençant, terminant ou 2 virgules collées).
 errorNbCards @ Le nombre de cartes doit être 6.
 errorUnknownCard @ $ n'est pas une carte valide.
 errorDuplicate @ la main proposée possède la même carte aux positions $ et $

@@ -952,9 +952,8 @@ public class GeneralMeths {
             br = new BufferedReader(new FileReader(file));
             while ((line = br.readLine()) != null) {
                 res += line + "\n";
-
             }
-
+            br.close();
         } catch (FileNotFoundException ex) {
             System.out.println("Error: the file" + file + " is missing");
             return null;

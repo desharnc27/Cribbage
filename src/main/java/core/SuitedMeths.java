@@ -1,5 +1,6 @@
 package core;
 
+import java.util.Arrays;
 import tools.GeneralMeths;
 
 /**
@@ -49,6 +50,12 @@ public class SuitedMeths {
         }
         if (stArr.length == 1) {
             stArr = stArr[0].split(",");
+        }
+        for (String arg : stArr) {
+            if (arg.length() == 0) {
+                String message = Langu.smallText("errorEmptyParam");
+                throw new CribbageException(message, true);
+            }
         }
         char cHasCrib = stArr[0].charAt(0);
         boolean myCrib = false;
@@ -467,33 +474,76 @@ public class SuitedMeths {
     }
 
     /**
-     * If the user omits suits in input (laziness), it is considered as a slang
+     * If the user omits all suits in input (laziness), it is considered as a slang
      * input. So this function transforms slang input into full input by adding
-     * balanced suits to the cards.
+       balanced suits to the cards. If some suits are missing but some not, all cards
+       * without suit are put in a same unseen suit.
      *
      * @param splitInput array containing split parts of user input.
+     * @throws core.CribbageException
      */
-    public static void manageSlangInput(String[] splitInput) {
-        try {
+    public static void manageSlangInput(String[] splitInput) throws CribbageException {
 
-            //If a member of splitInput has more than a character, its not pure slang
-            //So it won't be treated as slang
-            for (String s : splitInput) {
-                if (s.length() != 1) {
-                    return;
+        //If a member of splitInput has more than a character, its not pure slang
+        //So it won't be treated as slang
+        boolean [] hasSuit= new boolean[splitInput.length];
+        int suitedCount = 0;
+        for (int i = 0; i < splitInput.length; i++) {
+            if (splitInput[i].length() > 1) {
+                suitedCount++;
+                hasSuit[i] = true;
+            }
+        }
+        String message;
+        CribbageException ce;
+        switch (suitedCount) {
+            case 6:
+                return;
+            case 0:
+                //No suit -> random balanced suits for every card
+                int[] vals = new int[splitInput.length];
+
+                for (int i = 0; i < splitInput.length; i++) {
+                    vals[i] = DataForStrings.numEncode(splitInput[i].charAt(0));
                 }
-            }
-            int[] vals = new int[splitInput.length];
+                GeneralMeths.quickSort(vals);
+                for (int i = 0; i < splitInput.length; i++) {
+                    String suit = DataForStrings.strOfSuit(i % 4);
+                    splitInput[i] = suit + DataForStrings.symbolOfNum(vals[i]);
+                }
+                return;
+            default:
+                //Incomplete suiting -> fill the rest with a common new suit
+                char[] suits = new char[]{'c', 'd', 'h', 's'};
+                boolean[] taken = new boolean[4];
+                for (int i = 0; i < splitInput.length; i++) {
+                   if (!hasSuit[i])
+                       continue;
+                    char suit = splitInput[i].charAt(0);
+                    int idx = Arrays.binarySearch(suits, suit);
+                    if (idx < 0) {
+                        message = String.format("%dth card has invalid suit %s", i, suit);
+                        ce = new CribbageException(message);
+                        throw ce;
+                    }
+                    taken[idx] = true;
+                }
+                int commonIdx = 0;
+                try {
+                    while (taken[commonIdx]) {
+                        commonIdx++;
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    message = "Slang representations can't have all colors.";
+                    ce = new CribbageException(message);
+                    throw ce;
+                }
+                for (int i = 0; i < splitInput.length; i++) {
+                    if (hasSuit[i])
+                        continue;
+                    splitInput[i] = suits[commonIdx] + splitInput[i];
+                }
 
-            for (int i = 0; i < splitInput.length; i++) {
-                vals[i] = DataForStrings.numEncode(splitInput[i].charAt(0));
-            }
-            GeneralMeths.quickSort(vals);
-            for (int i = 0; i < splitInput.length; i++) {
-                String suit = DataForStrings.strOfSuit(i % 4);
-                splitInput[i] = suit + DataForStrings.symbolOfNum(vals[i]);
-            }
-        } catch (Exception e) {
         }
 
     }

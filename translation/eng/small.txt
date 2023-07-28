@@ -35,7 +35,8 @@ light @ Light
 
 errorHand @ Invalid Cribbage hand input: $
 errorNoInput @ No input entered
-errorLeftParam @ the leftmost paramter must be y or n, depending on if you have the crib or not
+errorLeftParam @ The leftmost paramter must be y or n, depending on if you have the crib or not
+errorEmptyParam @ A parameter can't be empty (2 joined commas, or starting or enging comma).
 errorNbCards @ the number of cards must be exactly 6
 errorUnknownCard @ $ is not a valid card
 errorDuplicate @ the hand you proposed has identical cards at indexes $ and $
