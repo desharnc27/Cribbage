@@ -1,8 +1,8 @@
 package core;
 
 /**
- * An instance of this class represents a choice of 2 cards (only identified by their numbers,
- * without suit)
+ * An instance of this class represents a choice of 2 cards (only identified by
+ * their numbers, without suit)
  *
  * @author desharnc27
  */

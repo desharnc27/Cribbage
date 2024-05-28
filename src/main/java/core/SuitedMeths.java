@@ -474,10 +474,10 @@ public class SuitedMeths {
     }
 
     /**
-     * If the user omits all suits in input (laziness), it is considered as a slang
-     * input. So this function transforms slang input into full input by adding
-       balanced suits to the cards. If some suits are missing but some not, all cards
-       * without suit are put in a same unseen suit.
+     * If the user omits all suits in input (laziness), it is considered as a
+     * slang input. So this function transforms slang input into full input by
+     * adding balanced suits to the cards. If some suits are missing but some
+     * not, all cards without suit are put in a same unseen suit.
      *
      * @param splitInput array containing split parts of user input.
      * @throws core.CribbageException
@@ -486,7 +486,7 @@ public class SuitedMeths {
 
         //If a member of splitInput has more than a character, its not pure slang
         //So it won't be treated as slang
-        boolean [] hasSuit= new boolean[splitInput.length];
+        boolean[] hasSuit = new boolean[splitInput.length];
         int suitedCount = 0;
         for (int i = 0; i < splitInput.length; i++) {
             if (splitInput[i].length() > 1) {
@@ -517,8 +517,9 @@ public class SuitedMeths {
                 char[] suits = new char[]{'c', 'd', 'h', 's'};
                 boolean[] taken = new boolean[4];
                 for (int i = 0; i < splitInput.length; i++) {
-                   if (!hasSuit[i])
-                       continue;
+                    if (!hasSuit[i]) {
+                        continue;
+                    }
                     char suit = splitInput[i].charAt(0);
                     int idx = Arrays.binarySearch(suits, suit);
                     if (idx < 0) {
@@ -539,8 +540,9 @@ public class SuitedMeths {
                     throw ce;
                 }
                 for (int i = 0; i < splitInput.length; i++) {
-                    if (hasSuit[i])
+                    if (hasSuit[i]) {
                         continue;
+                    }
                     splitInput[i] = suits[commonIdx] + splitInput[i];
                 }
 
