@@ -1,14 +1,11 @@
 package test;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import core.CCHBunch;
 import core.CentralSettings;
 import tools.CombMeths;
 import core.CribbageException;
 import core.DataForNumbers;
 import core.DataForStatFiles;
-import core.DataForStrings;
 import core.SuitedMeths;
 import core.UnsuitedMeths;
 import tools.GeneralMeths;
@@ -135,9 +132,9 @@ public class SmallTests {
         } catch (Exception e) {
             System.out.println(e.getClass());
             System.out.println(e.getMessage());
-            StackTraceElement[] ste = e.getStackTrace();
-            for (int i = 0; i < ste.length; i++) {
-                System.out.println(ste[i]);
+            StackTraceElement[] stes = e.getStackTrace();
+            for (StackTraceElement ste : stes) {
+                System.out.println(ste);
             }
         }
 

@@ -19,10 +19,10 @@ public class Langu {
     //TODO: reinsert default english
     private static boolean initialized = false;
 
-    private static final String fsl = System.getProperty("file.separator");
+    private static final String FSL = File.separator;
 
-    private static final String tDelimiter = "@";
-    private static final char commentChar = '*';
+    private static final String T_DELIMITER = "@";
+    private static final char COMMENT_CHAR = '*';
 
     private static String[] inputGuide;
     private static String[] about;
@@ -32,7 +32,7 @@ public class Langu {
     private static final ArrayList<TranslateNode> bank = new ArrayList<>();
 
     //private final static String langFolder = "translation" + fsl;
-    private final static String langFolName = "translation";
+    private final static String LANG_FOL_NAME = "translation";
 
     public static String getLang(int i) {
         return langSt[i];
@@ -150,14 +150,11 @@ public class Langu {
         }
         initialized = true;
         File file = new File(RootFinder.getRootPath() + "translation");
-        File[] folders = file.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                if (!f.isDirectory()) {
-                    return false;
-                }
-                return (f.getName().length() == 3);
+        File[] folders = file.listFiles((File f) -> {
+            if (!f.isDirectory()) {
+                return false;
             }
+            return (f.getName().length() == 3);
         });
         //Bring english to 0 (default)
         for (int i = 0; i < folders.length; i++) {
@@ -183,18 +180,18 @@ public class Langu {
         for (int lang = 0; lang < nbLang; lang++) {
 
             langSt[lang] = folders[lang].getName();
-            String partPath = RootFinder.getRootPath() + langFolName + fsl + langSt[lang] + fsl;
+            String partPath = RootFinder.getRootPath() + LANG_FOL_NAME + FSL + langSt[lang] + FSL;
 
             String fileText = GeneralMeths.fileToString(partPath + "small.txt");
             if (fileText == null) {
                 continue;
             }
             String[] lines = fileText.split("\n");
-            for (int i = 0; i < lines.length; i++) {
-                if (lines[i].length() < 3 || lines[i].charAt(0) == commentChar) {
+            for (String line : lines) {
+                if (line.length() < 3 || line.charAt(0) == COMMENT_CHAR) {
                     continue;
                 }
-                String[] sep = lines[i].split(" " + tDelimiter + " ");
+                String[] sep = line.split(" " + T_DELIMITER + " ");
                 String tag = sep[0];
                 if (lang == 0) {
                     TranslateNode tn = new TranslateNode(tag);
@@ -211,7 +208,7 @@ public class Langu {
 
                 /*String val = null;
                 if (sep.length == 2) {
-                    val = sep[1];
+                val = sep[1];
                 }
                 bank[idx][lang] = val;*/
             }

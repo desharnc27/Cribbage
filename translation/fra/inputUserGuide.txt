@@ -5,3 +5,16 @@ Pour toute chaine représentant une carte, le premier caractère doit être 's',
 Pour toute chaine représentant une carte, le dernier caractère doit être 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q' or 'K', indiquant le numéro de la carte.
 Exemples: "y,s5,d6,s3,dQ,h4,cK" ou "n,d8,s8,c6,c7,d5,cT".
 
+TODO: translate following:
+
+Note: there are some shorten ways of writting the input faster
+- Ace may also be entered as "1"
+- uppercase/lowercase does not matter for card numbers
+- Not indicating any suit will make the program assign suits for the cards. There will be 1 or 2 cards for each suit.
+- Indicating the suit of at least 2 cards but not all of them will make the program assign a same unused suit for all other cards.
+
+Examples:
+
+- "y,1,2,3,9,t,j" is the same as "y,sA,c2,d3,h9,sT,cJ"
+- "n,c3,s2,2,4,5,h5" is the same as "n,c3,s2,d2,d4,d5,h5"
+

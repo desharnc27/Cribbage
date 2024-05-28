@@ -47,6 +47,7 @@ public class Theme {
         return bckgrContColor;
     }
 
+    @Override
     public String toString() {
         return (name + ","
                 + txtContColor.getRGB() + ","

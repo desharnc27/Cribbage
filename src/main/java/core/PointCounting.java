@@ -20,7 +20,6 @@ public class PointCounting {
     private static boolean debugPoints = false;
 
     private static boolean debugFu = false;
-    static float debugSeed;
     private static float debugTresh = 1f;//0.0002f;
 
     /**
@@ -133,8 +132,8 @@ public class PointCounting {
      */
     public static int nobPoints(Card commo, Card[] hand) {
         int commoSuit = commo.getSuit();
-        for (int i = 0; i < hand.length; i++) {
-            if (hand[i].getNum() == 11 && hand[i].getSuit() == commoSuit) {
+        for (Card card : hand) {
+            if (card.getNum() == 11 && card.getSuit() == commoSuit) {
                 return 1;
             }
         }
@@ -193,8 +192,8 @@ public class PointCounting {
             System.out.println("------------");
             System.out.println("Flip: " + commo);
             System.out.print("Hand: ");
-            for (int i = 0; i < hand.length; i++) {
-                System.out.print(hand[i] + " ");
+            for (Card card : hand) {
+                System.out.print(card + " ");
             }
             System.out.println("");
             System.out.println("Fifteens:" + fifScore);

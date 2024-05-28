@@ -11,7 +11,7 @@ public class StatMain {
 
     public static void main(String[] args) {
         CentralSettings.doPreOperations();
-        int nbIter = 0;
+        int nbIter;
         try {
             nbIter = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {

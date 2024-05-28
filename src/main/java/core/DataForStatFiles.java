@@ -310,7 +310,7 @@ public class DataForStatFiles {
             while ((line = br.readLine()) != null) {
 
                 String[] sArr = line.split(" ");
-                float weight = Float.valueOf(sArr[1]);
+                float weight = Float.parseFloat(sArr[1]);
                 weights[i][j] = weight;
                 idx++;
                 j++;
@@ -385,7 +385,7 @@ public class DataForStatFiles {
             while ((line = br.readLine()) != null) {
 
                 String[] sArr = line.split(" ");
-                float weight = Float.valueOf(sArr[1]);
+                float weight = Float.parseFloat(sArr[1]);
                 if (trollWriter) {
                     if (i == j) {
                         weights[i][j] = 6.0f;
@@ -861,14 +861,15 @@ public class DataForStatFiles {
      * Divides all values of array by the same divisor, in such a way that all
      * values sum to 1.
      *
-     * @param weights
+     * @param arr
+     * @param targetSum
      */
     public static void unitarize(float[][] arr, float targetSum) {
         float sum = sum(arr);
         float coeff = targetSum / sum;
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                arr[i][j] *= coeff;
+        for (float[] arr1 : arr) {
+            for (int j = 0; j < arr1.length; j++) {
+                arr1[j] *= coeff;
             }
         }
     }

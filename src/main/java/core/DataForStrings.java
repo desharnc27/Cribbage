@@ -48,8 +48,8 @@ public class DataForStrings {
      */
     public static void print(Card commo, Card[] hand, int score) {
         System.out.print(commo.verbos() + ",,");
-        for (int i = 0; i < hand.length; i++) {
-            System.out.print(hand[i].verbos() + ",");
+        for (Card card : hand) {
+            System.out.print(card.verbos() + ",");
         }
         System.out.print(" " + score);
         System.out.println();
@@ -62,8 +62,8 @@ public class DataForStrings {
      * @param hand the cards of the hand
      */
     public static void print(Card[] hand) {
-        for (int i = 0; i < hand.length; i++) {
-            System.out.print(hand[i].verbos() + ",");
+        for (Card card : hand) {
+            System.out.print(card.verbos() + ",");
         }
         System.out.println();
 

@@ -104,12 +104,7 @@ public class MyFrame extends JFrame {
 
     private void createThemes() {
         File file = new File(RootFinder.getRootPath() + "themes");
-        File[] files = file.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                return true;
-            }
-        });
+        File[] files = file.listFiles((File f) -> true);
         themes = new Theme[files.length];
         for (int i = 0; i < themes.length; i++) {
             String txt = GeneralMeths.fileToString(files[i].getPath());

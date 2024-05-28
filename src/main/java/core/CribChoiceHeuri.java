@@ -1,7 +1,7 @@
 package core;
 
 /**
- * This class represents a choice of 2 cards (only identified by their numbers,
+ * An instance of this class represents a choice of 2 cards (only identified by their numbers,
  * without suit)
  *
  * @author desharnc27
@@ -109,10 +109,7 @@ public class CribChoiceHeuri {
         if (numbers[0] != c.numbers[0]) {
             return false;
         }
-        if (numbers[1] != c.numbers[1]) {
-            return false;
-        }
-        return true;
+        return numbers[1] == c.numbers[1];
     }
 
 }
